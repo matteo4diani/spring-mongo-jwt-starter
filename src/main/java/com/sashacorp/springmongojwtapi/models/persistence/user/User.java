@@ -260,6 +260,7 @@ public class User {
 	}
 	
 	public Authority getMaxAuthority() {
+		if (authorities == null) return null;
 		return authorities
 			      .stream()
 			      .min(Comparator.comparing(Authority::getAuthorityLevel))

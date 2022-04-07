@@ -367,7 +367,7 @@ public class MessageController {
 
 	}
 
-	@RequestMapping(value = "/messages/{messageId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = "/messages/id/{messageId}", method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteMessage(@PathVariable String messageId) {
 		messageRepository.deleteById(messageId);
 		return new ResponseEntity<Void>(HttpStatus.OK);
