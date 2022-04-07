@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.sashacorp.springmongojwtapi.models.http.resources.Url;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
@@ -43,10 +45,10 @@ public class UserController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/users", method = RequestMethod.GET)
+	@RequestMapping(value = Url.USERS, method = RequestMethod.GET)
 	public ResponseEntity<?> getUsers() {
 		Map<String, List<Message>> messagesByUser = messageRepository
-				.findByStartBeforeAndEndAfterAndPendingIsFalseAndApprovedIsTrue(TimeUtil.now()).parallelStream()
+				.findOngoing(TimeUtil.now()).parallelStream()
 				.collect(Collectors.groupingBy(Message::fetchRequirerUsernameIfPresent, Collectors.toList()));
 		
 		List<User> users = userRepository.findAll().parallelStream().map(user -> {
@@ -64,7 +66,7 @@ public class UserController {
 	 * @param username
 	 * @return
 	 */
-	@RequestMapping(value = "/users/{username}", method = RequestMethod.GET)
+	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable String username) {
 		if (userRepository.existsByUsername(username)) {
 			User user = userRepository.findByUsername(username);
@@ -84,7 +86,7 @@ public class UserController {
 	 * @param userFromRequest - provide
 	 * @return
 	 */
-	@RequestMapping(value = "/users/{username}", method = RequestMethod.PUT)
+	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserData(@PathVariable String username, @RequestBody User userFromRequest) {
 		if (userRepository.existsByUsername(username)) {
 			User userToUpdate = userRepository.findByUsername(username);
@@ -107,7 +109,7 @@ public class UserController {
 	 *                               JSON
 	 * @return
 	 */
-	@RequestMapping(value = "/users/authorities/{username}", method = RequestMethod.PUT)
+	@RequestMapping(value = Url.USER_AUTHORITIES_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserAuthorities(@PathVariable String username,
 			@RequestBody Set<String> authoritiesFromRequest) {
 		if (userRepository.existsByUsername(username)) {
@@ -138,7 +140,7 @@ public class UserController {
 	 *                 "hardcoded": true|false} in JSON
 	 * @return
 	 */
-	@RequestMapping(value = "/users/status/{username}", method = RequestMethod.PUT)
+	@RequestMapping(value = Url.USER_STATUS_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserStatus(@PathVariable String username, @RequestBody Status status) {
 		if (userRepository.existsByUsername(username)) {
 			User userToUpdate = userRepository.findByUsername(username);

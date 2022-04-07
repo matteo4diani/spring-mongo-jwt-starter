@@ -39,7 +39,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'pending' : false , 'approved' : ?0 }")
-	public List<Message> findByApprovedAndPendingIsFalse(boolean approved);
+	public List<Message> findByApproval(boolean approved);
 
 	/**
 	 * Find current messages. Refer to {@link MessageRepository} for definitions
@@ -49,7 +49,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *            (Europe/Rome).
 	 */
 	@Query("{ 'end' : { $gt : ?0 } }")
-	public List<Message> findByEndAfter(LocalDateTime now);
+	public List<Message> findCurrent(LocalDateTime now);
 
 	/**
 	 * Find current messages by <b>pending</b>. Refer to {@link MessageRepository}
@@ -61,7 +61,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param pending - <b>true</b> means the message has no responses yet
 	 */
 	@Query("{ 'end' : { $gt : ?0 }, 'pending' : ?1 }")
-	public List<Message> findByEndAfterAndPending(LocalDateTime now, boolean pending);
+	public List<Message> findCurrentByPending(LocalDateTime now, boolean pending);
 
 	/**
 	 * Find current messages by <b>approved</b>. Refer to {@link MessageRepository}
@@ -74,7 +74,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'end' : { $gt : ?0 }, 'pending' : false, 'approved' : ?1 }")
-	public List<Message> findByEndAfterAndApprovedAndPendingIsFalse(LocalDateTime now, boolean approved);
+	public List<Message> findCurrentByApproval(LocalDateTime now, boolean approved);
 
 	/**
 	 * Find ongoing messages. Refer to {@link MessageRepository} for definitions
@@ -84,7 +84,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *            (Europe/Rome).
 	 */
 	@Query("{ 'start' : { $lte : ?0 } , 'end' : { $gt : ?0 }, 'pending' : false, 'approved' : true }")
-	public List<Message> findByStartBeforeAndEndAfterAndPendingIsFalseAndApprovedIsTrue(LocalDateTime now);
+	public List<Message> findOngoing(LocalDateTime now);
 
 	/**
 	 * Find outdated messages. Refer to {@link MessageRepository} for definitions
@@ -94,7 +94,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *            (Europe/Rome).
 	 */
 	@Query("{ 'end' : { $lte : ?0 } }")
-	public List<Message> findByEndBefore(LocalDateTime now);
+	public List<Message> findOutdated(LocalDateTime now);
 
 	/**
 	 * Find outdated messages by <b>pending</b>. Refer to {@link MessageRepository}
@@ -106,7 +106,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param pending - <b>true</b> means the message has no responses yet
 	 */
 	@Query("{ 'end' : { $lte : ?0 }, 'pending' : ?1 }")
-	public List<Message> findByEndBeforeAndPending(LocalDateTime now, boolean pending);
+	public List<Message> findOutdatedByPending(LocalDateTime now, boolean pending);
 
 	/**
 	 * Find outdated messages by <b>approved</b>. Refer to {@link MessageRepository}
@@ -119,7 +119,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'end' : { $lte : ?0 }, 'pending' : false , 'approved' : ?1 }")
-	public List<Message> findByEndBeforeAndApprovedAndPendingIsFalse(LocalDateTime now, boolean approved);
+	public List<Message> findOutdatedByApproval(LocalDateTime now, boolean approved);
 
 	/**
 	 * Find by requirer username. Refer to {@link MessageRepository} for definitions
@@ -127,7 +127,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param username - username of the sender
 	 */
 	@Query("{ 'requirer.username' : ?0 }")
-	public List<Message> findByRequirerUsername(String username);
+	public List<Message> findByReqUsername(String username);
 
 	/**
 	 * Find by requirer username and <b>pending</b>. Refer to
@@ -138,7 +138,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param pending  - <b>true</b> means the message has no responses yet
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'pending' : ?1 }")
-	public List<Message> findByRequirerUsernameAndPending(String username, boolean pending);
+	public List<Message> findByReqUsernameAndPending(String username, boolean pending);
 
 	/**
 	 * Find by requirer username and <b>approved</b>. Refer to
@@ -152,7 +152,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'pending' : false , 'approved' : ?1 }")
-	public List<Message> findByRequirerUsernameAndApprovedAndPendingIsFalse(String username, boolean approved);
+	public List<Message> findByReqUsernameAndApproval(String username, boolean approved);
 
 	/**
 	 * Find current messages by requirer username. Refer to
@@ -164,7 +164,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 (Europe/Rome).
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $gt : ?1 } }")
-	public List<Message> findByEndAfterAndRequirerUsername(String username, LocalDateTime now);
+	public List<Message> findCurrentByReqUsername(String username, LocalDateTime now);
 
 	/**
 	 * Find current messages by requirer username and <b>pending</b>. Refer to
@@ -177,7 +177,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param pending  - <b>true</b> means the message has no responses yet
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $gt : ?1 }, 'pending' : ?2 }")
-	public List<Message> findByEndAfterAndRequirerUsernameAndPending(String username, LocalDateTime now,
+	public List<Message> findCurrentByReqUsernameAndPending(String username, LocalDateTime now,
 			boolean pending);
 
 	/**
@@ -192,7 +192,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $gt : ?1 }, 'pending' : false , 'approved' : ?2 }")
-	public List<Message> findByEndAfterAndRequirerUsernameAndApprovedAndPendingIsFalse(String username,
+	public List<Message> findCurrentByReqUsernameAndApproval(String username,
 			LocalDateTime now, boolean approved);
 
 	/**
@@ -205,7 +205,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 (Europe/Rome).
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'start' : { $lte : ?1 } , 'end' : { $gt : ?1 }, 'pending' : false , 'approved' : true }")
-	public List<Message> findByStartBeforeAndEndAfterAndRequirerUsernameAndPendingIsFalseAndApprovedIsTrue(
+	public List<Message> findOngoingByReqUsername(
 			String username, LocalDateTime now);
 
 	/**
@@ -218,7 +218,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 (Europe/Rome).
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $lte : ?1 } }")
-	public List<Message> findByEndBeforeAndRequirerUsername(String username, LocalDateTime now);
+	public List<Message> findOutdatedReqUsername(String username, LocalDateTime now);
 
 	/**
 	 * Find outdated messages by requirer username and <b>pending</b>. Refer to
@@ -231,7 +231,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @param pending  - <b>true</b> means the message has no responses yet
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $lte : ?1 } , 'pending' : ?2 }")
-	public List<Message> findByEndBeforeAndRequirerUsernameAndPending(String username, LocalDateTime now,
+	public List<Message> findOutdatedByReqUsernameAndPending(String username, LocalDateTime now,
 			boolean pending);
 
 	/**
@@ -246,7 +246,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 *                 been approved
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'end' : { $lte : ?1 } , 'pending' : false , 'approved' : ?2 }")
-	public List<Message> findByEndBeforeAndRequirerUsernameAndApprovedAndPendingIsFalse(String username,
+	public List<Message> findApprovalByReqUsernameAndApproval(String username,
 			LocalDateTime now, boolean approved);
 
 	/**
@@ -259,7 +259,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @return
 	 */
 	@Query("{ 'approved' : true , $or : [ { 'start' : { $gte : ?0 , $lt : ?1 } } , { 'end' : { $gt : ?0 , $lte : ?1 } } ] }")
-	public List<Message> findByStartBetweenAndEndBetweenAndApprovedIsTrue(LocalDateTime from, LocalDateTime to);
+	public List<Message> findApprovedBetween(LocalDateTime from, LocalDateTime to);
 
 	/**
 	 * Find all approved messages with start or end between <b>from</b> and
@@ -271,7 +271,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @return
 	 */
 	@Query("{ 'requirer.username' : ?0 , 'approved' : true , $or : [ { 'start' : { $gte : ?1 , $lt : ?2 } } , { 'end' : { $gt : ?1 , $lte : ?2 } } ] }")
-	public List<Message> findByStartBetweenAndEndBetweenAndRequirerUsernameAndApprovedIsTrue(String username,
+	public List<Message> findApprovedBetweenByReqUsername(String username,
 			LocalDateTime from, LocalDateTime to);
 
 	/**
@@ -284,7 +284,7 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @return
 	 */
 	@Query("{ 'requirer.username' : ?0 , $or : [ { 'start' : { $gte : ?1 , $lt : ?2 } } , { 'end' : { $gt : ?1 , $lte : ?2 } } ] }")
-	public List<Message> findByStartBetweenAndEndBetweenAndRequirerUsername(String username, LocalDateTime from,
+	public List<Message> findBetweenByReqUsername(String username, LocalDateTime from,
 			LocalDateTime to);
 
 	/**
@@ -297,6 +297,6 @@ public interface MessageRepository extends MongoRepository<Message, String> {
 	 * @return
 	 */
 	@Query("{ 'requirer.team' : ?0 , 'approved' : true , $or : [ { 'start' : { $gte : ?1 , $lt : ?2 } } , { 'end' : { $gt : ?1 , $lte : ?2 } } ] }")
-	public List<Message> findByStartBetweenAndEndBetweenAndRequirerTeamAndApprovedIsTrue(String team,
+	public List<Message> findApprovedBetweenByReqTeam(String team,
 			LocalDateTime from, LocalDateTime to);
 }

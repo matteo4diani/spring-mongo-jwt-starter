@@ -10,6 +10,9 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
+import com.sashacorp.springmongojwtapi.models.http.resources.Links;
+
 /**
  * Entity class representing users. <br>
  * <span style='color: red;'><b>Warning: </b></span> Instances of this class
@@ -23,11 +26,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
  *
  */
 @Document(collection = "users")
-public class User {
-
-	/**
-	 * 
-	 */
+public class User implements Hateoas {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -53,11 +52,10 @@ public class User {
 
 	private String site;
 	private Status status;
-
-
     
 	private Set<Authority> authorities = new HashSet<>();
-
+	
+	private Links _resources = null;
 	public User() {
 		super();
 	}
@@ -266,5 +264,12 @@ public class User {
 			      .min(Comparator.comparing(Authority::getAuthorityLevel))
 			      .orElseThrow(NoSuchElementException::new);
 	}
+
+	@Override
+	public Links get_resources() {
+		return _resources;
+	}
+
+	
 
 }

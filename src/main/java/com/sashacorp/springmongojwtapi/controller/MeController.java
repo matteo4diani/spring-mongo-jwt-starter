@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.MessageResponse;
+import com.sashacorp.springmongojwtapi.models.http.Errors;
+import com.sashacorp.springmongojwtapi.models.http.Notifications;
+import com.sashacorp.springmongojwtapi.models.http.resources.Par;
+import com.sashacorp.springmongojwtapi.models.http.resources.Url;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
@@ -23,6 +26,7 @@ import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.service.sse.AdminNotificationService;
+import com.sashacorp.springmongojwtapi.util.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 
@@ -41,17 +45,16 @@ public class MeController {
 	UserRepository userRepository;
 	@Autowired
 	MessageRepository messageRepository;
-
 	/**
 	 * Get the current user's details
 	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/me", method = RequestMethod.GET)
+	@RequestMapping(value = Url.ME, method = RequestMethod.GET)
 	public ResponseEntity<?> getMe() {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-
+		
 		if (userRepository.existsByUsername(userDetails.getUsername())) {
 			User user = userRepository.findByUsername(userDetails.getUsername());
 			user.eraseCredentials();
@@ -70,33 +73,27 @@ public class MeController {
 	 * @param approved
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages", method = RequestMethod.GET)
-	public ResponseEntity<?> getMyMessages(@RequestParam(required = false) Boolean pending,
-			@RequestParam(required = false) Boolean approved) {
+	@RequestMapping(value = Url.MY_MESSAGES, method = RequestMethod.GET)
+	public ResponseEntity<?> getMyMessages(@RequestParam(name = Par.PENDING, required = false) Boolean pending,
+			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByRequirerUsernameAndApprovedAndPendingIsFalse(username, approved),
+					messageRepository.findByReqUsernameAndApproval(username, approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByRequirerUsernameAndPending(username, pending), HttpStatus.OK);
+					messageRepository.findByReqUsernameAndPending(username, pending), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<List<Message>>(messageRepository.findByRequirerUsername(username), HttpStatus.OK);
+			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsername(username), HttpStatus.OK);
 		}
 	}
 
@@ -108,35 +105,29 @@ public class MeController {
 	 * @param approved - Optional. if present, <b>pending</b> is set to <b>false</b>
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages/current", method = RequestMethod.GET)
-	public ResponseEntity<?> getMyCurrentMessages(@RequestParam(required = false) Boolean pending,
-			@RequestParam(required = false) Boolean approved) {
+	@RequestMapping(value = Url.MY_CURRENT_MESSAGES, method = RequestMethod.GET)
+	public ResponseEntity<?> getMyCurrentMessages(@RequestParam(name = Par.PENDING, required = false) Boolean pending,
+			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
 			return new ResponseEntity<List<Message>>(messageRepository
-					.findByEndAfterAndRequirerUsernameAndApprovedAndPendingIsFalse(username, TimeUtil.now(), approved),
+					.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByEndAfterAndRequirerUsernameAndPending(username, TimeUtil.now(), pending),
+					messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending),
 					HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByEndAfterAndRequirerUsername(username, TimeUtil.now()), HttpStatus.OK);
+					messageRepository.findCurrentByReqUsername(username, TimeUtil.now()), HttpStatus.OK);
 		}
 
 	}
@@ -149,25 +140,19 @@ public class MeController {
 	 * @param approved - Optional. if present, <b>pending</b> is set to <b>false</b>
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages/ongoing", method = RequestMethod.GET)
+	@RequestMapping(value = Url.MY_ONGOING_MESSAGES, method = RequestMethod.GET)
 	public ResponseEntity<?> getMyOngoingMessages() {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		return new ResponseEntity<List<Message>>(
-				messageRepository.findByStartBeforeAndEndAfterAndRequirerUsernameAndPendingIsFalseAndApprovedIsTrue(
+				messageRepository.findOngoingByReqUsername(
 						username, TimeUtil.now()),
 				HttpStatus.OK);
 	}
@@ -180,35 +165,29 @@ public class MeController {
 	 * @param approved - Optional. if present, <b>pending</b> is set to <b>false</b>
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages/outdated", method = RequestMethod.GET)
-	public ResponseEntity<?> getMyOutdatedMessages(@RequestParam(required = false) Boolean pending,
-			@RequestParam(required = false) Boolean approved) {
+	@RequestMapping(value = Url.MY_OUTDATED_MESSAGES, method = RequestMethod.GET)
+	public ResponseEntity<?> getMyOutdatedMessages(@RequestParam(name = Par.PENDING, required = false) Boolean pending,
+			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
 			return new ResponseEntity<List<Message>>(messageRepository
-					.findByEndBeforeAndRequirerUsernameAndApprovedAndPendingIsFalse(username, TimeUtil.now(), approved),
+					.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByEndBeforeAndRequirerUsernameAndPending(username, TimeUtil.now(), pending),
+					messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending),
 					HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<Message>>(
-					messageRepository.findByEndBeforeAndRequirerUsername(username, TimeUtil.now()), HttpStatus.OK);
+					messageRepository.findOutdatedReqUsername(username, TimeUtil.now()), HttpStatus.OK);
 		}
 	}
 
@@ -218,19 +197,13 @@ public class MeController {
 	 * @param messageId
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages/id/{messageId}", method = RequestMethod.GET)
+	@RequestMapping(value = Url.MY_MESSAGE_BY_MESSAGE_ID, method = RequestMethod.GET)
 	public ResponseEntity<?> getMyMessageById(@PathVariable String messageId) {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
@@ -254,29 +227,23 @@ public class MeController {
 	 * @param message - provide 'start', 'end', 'requestNote' and 'leave' in JSON
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages", method = RequestMethod.POST)
+	@RequestMapping(value = Url.MY_MESSAGES, method = RequestMethod.POST)
 	public ResponseEntity<?> postMyMessage(@RequestBody Message message) {
 
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		User user = userRepository.findByUsername(userDetails.getUsername());
 		user.eraseCredentials();
 		user.eraseState();
-		List<Message> requestsFromStartToEnd = messageRepository.findByStartBetweenAndEndBetweenAndRequirerUsername(
+		List<Message> requestsFromStartToEnd = messageRepository.findBetweenByReqUsername(
 				user.getUsername(), message.getStart(), message.getEnd());
 
-		/**
+		/*
 		 * Activities cannot overlap, thus when posting a new request we check
 		 * beforehand if the user has any ongoing activities in the selected timeslot.
 		 * If so, we return an HTTP STATUS 418 ("I'M A TEAPOT"), because they're trying
@@ -291,8 +258,8 @@ public class MeController {
 		message.setRequirer(user);
 		message.setSeen(true);
 		Message newMessage = messageRepository.save(message);
-		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse("POST", user.getId(), user.getUsername(),
-				newMessage.getId(), newMessage);
+		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.POST_USER.text(),
+				user.getId(), user.getUsername(), newMessage.getId(), newMessage);
 		adminNotificationService.getEventPublisher().publishEvent(adminNotificationEvent);
 		return new ResponseEntity<Message>(newMessage, HttpStatus.CREATED);
 	}
@@ -303,20 +270,14 @@ public class MeController {
 	 * @param messageId
 	 * @return
 	 */
-	@RequestMapping(value = "/me/messages/id/{messageId}", method = RequestMethod.DELETE)
+	@RequestMapping(value = Url.MY_MESSAGE_BY_MESSAGE_ID, method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteMyMessage(@PathVariable String messageId) {
 
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 
-		if (userDetails == null) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
-		}
-
-		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return new ResponseEntity<MessageResponse>(new MessageResponse("Authentication Error: Username not found!"),
-					HttpStatus.FORBIDDEN);
+		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
+			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
