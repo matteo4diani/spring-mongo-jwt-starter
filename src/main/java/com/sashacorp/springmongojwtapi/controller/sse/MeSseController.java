@@ -56,8 +56,8 @@ public class MeSseController {
 	/**
 	 * 
 	 * Event listener for user notifications. <br/>
-	 * Broadcasts to the user matching the 'userId' in {@link UserNotificationSse} a server sent event with 'data':
-	 * {...userNotification}. <br/>
+	 * Broadcasts to the user matching the 'userId' in {@link UserNotificationSse} a
+	 * server sent event with 'data': {...userNotification}. <br/>
 	 * Checks for disconnected emitters and removes them from the emitter pool.
 	 * 
 	 * @param userNotification

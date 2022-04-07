@@ -4,24 +4,26 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * This class is to be used by the user agent to understand and internationalize the 'leave' property of {@link Message} 
+ * This class is to be used by the user agent to understand and internationalize
+ * the 'leave' property of {@link Message}
+ * 
  * @author matteo
  *
  */
-@Document(collection="leaves")
+@Document(collection = "leaves")
 public class Leave {
-	
+
 	@Id
 	private String id;
-	
+
 	private String name;
-	private String ita;
-	private String eng;
+
+	private String description;
 
 	public Leave() {
 		super();
 	}
-	
+
 	public String getId() {
 		return id;
 	}
@@ -30,38 +32,20 @@ public class Leave {
 		this.id = id;
 	}
 
-	public Leave(String leave, String ita) {
-		super();
-		this.name = leave;
-		this.ita = ita;
-	}
-	
-	public Leave(String leave, String ita, String eng) {
-		super();
-		this.name = leave;
-		this.ita = ita;
-		this.eng = eng;
-	}
-	
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String leave) {
 		this.name = leave;
 	}
-	public String getIta() {
-		return ita;
+
+	public String getDescription() {
+		return description;
 	}
-	public void setIta(String ita) {
-		this.ita = ita;
+
+	public void setDescription(String description) {
+		this.description = description;
 	}
-	public String getEng() {
-		return eng;
-	}
-	public void setEng(String eng) {
-		this.eng = eng;
-	}
-	
-	
 
 }

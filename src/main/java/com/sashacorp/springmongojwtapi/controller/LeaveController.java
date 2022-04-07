@@ -14,21 +14,24 @@ import com.sashacorp.springmongojwtapi.repository.LeaveRepository;
 
 /**
  * API endpoints to manage event (leaves) types
+ * 
  * @author matteo
  *
  */
 @RestController
 @CrossOrigin
 public class LeaveController {
-	
+
 	@Autowired
 	LeaveRepository leaveRepository;
+
 	/**
 	 * Get all leave types. See {@link Leave}.
+	 * 
 	 * @return
 	 */
-	@RequestMapping({"/leaves"})
-	public ResponseEntity<List<Leave>> getAllLeaves() {	
+	@RequestMapping({ "/leaves" })
+	public ResponseEntity<List<Leave>> getAllLeaves() {
 		return new ResponseEntity<List<Leave>>(leaveRepository.findAll(), HttpStatus.OK);
 	}
 

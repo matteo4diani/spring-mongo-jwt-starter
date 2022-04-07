@@ -12,22 +12,24 @@ import com.sashacorp.springmongojwtapi.repository.UserRepository;
 
 /**
  * Custom implementation of Spring's {@link UserDetailsService} interface.
- * Exposes the {@link UserRepository} service converting a {@link User} to a Spring-compliant {@link UserDetailsImpl}
+ * Exposes the {@link UserRepository} service converting a {@link User} to a
+ * Spring-compliant {@link UserDetailsImpl}
+ * 
  * @author matteo
  *
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
-	
+
 	@Autowired
 	public UserRepository userRepository;
 
-    @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-    	User user = userRepository.findByUsername(username);
-        
-       	return UserDetailsImpl.build(user);
-    
-    }
+	@Override
+	@Transactional
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		User user = userRepository.findByUsername(username);
+
+		return UserDetailsImpl.build(user);
+
+	}
 }

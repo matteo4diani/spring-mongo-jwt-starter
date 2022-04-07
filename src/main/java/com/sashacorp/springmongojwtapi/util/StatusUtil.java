@@ -3,8 +3,6 @@ package com.sashacorp.springmongojwtapi.util;
 import java.util.List;
 import java.util.Map;
 
-
-
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
@@ -13,15 +11,17 @@ import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 /**
  * Utility class to define status computation rules in a single place. Provides
  * an overloaded <i>setUserStatus</i> method fit for most use cases. Please keep
- * all status related logic in this class.
- * Status computations depend on {@link MessageRepository}'s definitions.
+ * all status related logic in this class. Status computations depend on
+ * {@link MessageRepository}'s definitions.
+ * 
  * @author matteo
  *
  */
 public class StatusUtil {
-	
+
 	/**
 	 * Sets the user status based on his ongoing activity
+	 * 
 	 * @param messagesByUser
 	 * @param user
 	 */
@@ -34,11 +34,13 @@ public class StatusUtil {
 
 		setUserStatus(messageRepository, true, null, user);
 	}
+
 	/**
 	 * Sets the user's status using a message source of choice.
 	 * 
 	 * @param messageRepository
-	 * @param useRepository - if <b>true</b> messageRepository will be used to fetch user messages
+	 * @param useRepository     - if <b>true</b> messageRepository will be used to
+	 *                          fetch user messages
 	 * @param messagesByUser
 	 * @param user
 	 */
