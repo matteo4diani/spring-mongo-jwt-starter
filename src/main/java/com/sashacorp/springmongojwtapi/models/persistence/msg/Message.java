@@ -1,11 +1,15 @@
 package com.sashacorp.springmongojwtapi.models.persistence.msg;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.sashacorp.springmongojwtapi.controller.MeController;
+import com.sashacorp.springmongojwtapi.controller.MessageController;
+import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
+import com.sashacorp.springmongojwtapi.models.http.resources.Links;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
 /**
@@ -17,7 +21,7 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
  *
  */
 @Document(collection = "messages")
-public class Message {
+public class Message implements Hateoas{
 
 	@Id
 	private String id;
@@ -42,6 +46,8 @@ public class Message {
 	private User responder;
 
 	private String leave;
+
+	private Links _resources = null;
 
 	public void setLeave(String leave) {
 		this.leave = leave;
@@ -171,6 +177,24 @@ public class Message {
 			return requirer.getUsername();
 		else
 			return "";
+	}
+
+	@Override
+	public Links get_resources() {
+		return _resources;
+	}
+
+	@Override
+	public void setResources(Map<String, String> uris) {
+		this._resources = computeResources(uris);
+	}
+
+	@Override
+	public String replacePathVariables(String url) {
+		return url
+				.replace(placeholder("messageId"), id)
+				.replace(placeholder("username"), requirer.getUsername())
+				.replace(placeholder("responderUsername"), responder == null ? "?" : responder.getUsername());
 	}
 
 }

@@ -21,4 +21,4 @@ Just import in Eclipse as 'Existing Maven Project'. You need a running MongoDB i
 6. Implement front-end
 7. Setup GitHub CI/CD
 8. Add postman collection - ONGOING - [https://apitransform.com/how-to-add-postman-collection-to-github/](https://apitransform.com/how-to-add-postman-collection-to-github/)
-
+9. Implement queries by responder

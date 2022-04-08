@@ -87,7 +87,7 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
-
+		User user = userRepository.findByUsername(username);
 		if (approved != null) {
 			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndApproval(username, approved),
 					HttpStatus.OK);
