@@ -20,9 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.http.Errors;
-import com.sashacorp.springmongojwtapi.models.http.PlainTextResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationRequest;
-import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.SignupRequest;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;

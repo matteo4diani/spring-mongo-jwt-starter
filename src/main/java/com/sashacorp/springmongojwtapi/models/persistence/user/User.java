@@ -263,7 +263,7 @@ public class User implements Hateoas {
 		return authorities
 			      .stream()
 			      .min(Comparator.comparing(Authority::getAuthorityLevel))
-			      .orElseThrow(NoSuchElementException::new);
+			      .orElse(null);
 	}
 
 	@Override
