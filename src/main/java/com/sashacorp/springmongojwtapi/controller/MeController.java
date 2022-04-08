@@ -1,6 +1,9 @@
 package com.sashacorp.springmongojwtapi.controller;
 
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +24,7 @@ import com.sashacorp.springmongojwtapi.models.http.resources.Par;
 import com.sashacorp.springmongojwtapi.models.http.resources.Url;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
@@ -45,6 +49,7 @@ public class MeController {
 	UserRepository userRepository;
 	@Autowired
 	MessageRepository messageRepository;
+
 	/**
 	 * Get the current user's details
 	 * 
@@ -54,9 +59,17 @@ public class MeController {
 	public ResponseEntity<?> getMe() {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
-		
+
 		if (userRepository.existsByUsername(userDetails.getUsername())) {
 			User user = userRepository.findByUsername(userDetails.getUsername());
+			if (user.hasEnoughAuthority(Authority.HR)) {
+				Map<String, String> resources = Stream.of(Url.adminUserResources, Url.userResources)
+						.flatMap(map -> map.entrySet().stream())
+						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+				user.setResources(resources);
+			} else {
+				user.setResources(Url.userResources);
+			}
 			user.eraseCredentials();
 			StatusUtil.setUserStatus(messageRepository, user);
 			return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -86,12 +99,11 @@ public class MeController {
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(
-					messageRepository.findByReqUsernameAndApproval(username, approved),
+			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsernameAndApproval(username, approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
-			return new ResponseEntity<List<Message>>(
-					messageRepository.findByReqUsernameAndPending(username, pending), HttpStatus.OK);
+			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsernameAndPending(username, pending),
+					HttpStatus.OK);
 		} else {
 			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsername(username), HttpStatus.OK);
 		}
@@ -118,8 +130,8 @@ public class MeController {
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(messageRepository
-					.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
+			return new ResponseEntity<List<Message>>(
+					messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
 			return new ResponseEntity<List<Message>>(
@@ -151,9 +163,7 @@ public class MeController {
 
 		String username = userDetails.getUsername();
 
-		return new ResponseEntity<List<Message>>(
-				messageRepository.findOngoingByReqUsername(
-						username, TimeUtil.now()),
+		return new ResponseEntity<List<Message>>(messageRepository.findOngoingByReqUsername(username, TimeUtil.now()),
 				HttpStatus.OK);
 	}
 
@@ -178,8 +188,8 @@ public class MeController {
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(messageRepository
-					.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
+			return new ResponseEntity<List<Message>>(
+					messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
 			return new ResponseEntity<List<Message>>(
@@ -240,8 +250,8 @@ public class MeController {
 		User user = userRepository.findByUsername(userDetails.getUsername());
 		user.eraseCredentials();
 		user.eraseState();
-		List<Message> requestsFromStartToEnd = messageRepository.findBetweenByReqUsername(
-				user.getUsername(), message.getStart(), message.getEnd());
+		List<Message> requestsFromStartToEnd = messageRepository.findBetweenByReqUsername(user.getUsername(),
+				message.getStart(), message.getEnd());
 
 		/*
 		 * Activities cannot overlap, thus when posting a new request we check

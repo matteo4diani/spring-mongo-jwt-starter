@@ -1,5 +1,8 @@
 package com.sashacorp.springmongojwtapi.models.http.resources;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Url {
 	
 	/*
@@ -54,5 +57,20 @@ public class Url {
 	public static final String USER_BY_USERNAME = USERS + BY_USERNAME;
 	public static final String USER_AUTHORITIES_BY_USERNAME = USERS + AUTHORITIES + BY_USERNAME;
 	public static final String USER_STATUS_BY_USERNAME = USERS + STATUS + BY_USERNAME;
+	
+	public static Map<String, String> adminUserResources;
+	public static Map<String, String> userResources;
+	public static Map<String, String> adminMessageResources;
+	public static Map<String, String> messageResources;
+	static {
+		userResources = new HashMap<>();
+		userResources.put("_self", ME);
+		userResources.put("_messages", MY_MESSAGES);
+		adminUserResources = new HashMap<>();
+		adminUserResources.put("_adminself", USER_BY_USERNAME);
+		adminUserResources.put("_adminmessages", MESSAGES_BY_USERNAME);
+		adminUserResources.put("_authorities", USER_AUTHORITIES_BY_USERNAME);
+		adminUserResources.put("_status", USER_STATUS_BY_USERNAME);
+	}
 
 }

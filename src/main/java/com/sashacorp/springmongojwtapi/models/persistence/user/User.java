@@ -2,6 +2,7 @@ package com.sashacorp.springmongojwtapi.models.persistence.user;
 
 import java.util.Comparator;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.NoSuchElementException;
 import java.util.Set;
 
@@ -269,6 +270,26 @@ public class User implements Hateoas {
 	public Links get_resources() {
 		return _resources;
 	}
+
+	@Override
+	public void setResources(Map<String, String> uris) {
+		this._resources = computeResources(uris);
+	}
+
+	@Override
+	public String replacePathVariables(String url) {
+		return url
+				.replace(placeholder("username"), username)
+				.replace(placeholder("team"), team == null ? "?" : team);
+	}
+	
+	public boolean hasAuthority(Authority authority) {
+		return authorities == null ? false : authorities.contains(authority);
+	}
+	public boolean hasEnoughAuthority(Authority authority) {
+		return authorities == null ? false : getMaxAuthority().getAuthorityLevel() <= authority.getAuthorityLevel();
+	}
+
 
 	
 
