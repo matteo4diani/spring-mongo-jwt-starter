@@ -1,9 +1,6 @@
 package com.sashacorp.springmongojwtapi.controller;
 
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,11 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.http.Errors;
 import com.sashacorp.springmongojwtapi.models.http.Notifications;
+import com.sashacorp.springmongojwtapi.models.http.resources.HateoasUtil;
 import com.sashacorp.springmongojwtapi.models.http.resources.Par;
 import com.sashacorp.springmongojwtapi.models.http.resources.Url;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
@@ -62,14 +59,7 @@ public class MeController {
 
 		if (userRepository.existsByUsername(userDetails.getUsername())) {
 			User user = userRepository.findByUsername(userDetails.getUsername());
-			if (user.hasEnoughAuthority(Authority.HR)) {
-				Map<String, String> resources = Stream.of(Url.adminUserResources, Url.userResources)
-						.flatMap(map -> map.entrySet().stream())
-						.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-				user.setResources(resources);
-			} else {
-				user.setResources(Url.userResources);
-			}
+			HateoasUtil.setUserResources(user);
 			user.eraseCredentials();
 			StatusUtil.setUserStatus(messageRepository, user);
 			return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -78,6 +68,8 @@ public class MeController {
 		return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
 
 	}
+
+	
 
 	/**
 	 * Get all messages for the current user
