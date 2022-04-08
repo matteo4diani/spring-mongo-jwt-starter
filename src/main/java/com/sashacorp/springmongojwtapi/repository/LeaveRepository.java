@@ -9,13 +9,13 @@ import com.sashacorp.springmongojwtapi.models.persistence.msg.Leave;
 
 /**
  * Repository interface for the {@link Leave} entity.
+ * 
  * @author matteo
  *
  */
-public interface LeaveRepository extends MongoRepository <Leave, String>{
-	
-	@Query(value="{}", fields="{'name' : 1}")
+public interface LeaveRepository extends MongoRepository<Leave, String> {
+
+	@Query(value = "{}", fields = "{'name' : 1}")
 	List<String> findAllLeaveNames();
-	
-	
+
 }

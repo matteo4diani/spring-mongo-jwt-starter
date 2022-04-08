@@ -1,36 +1,31 @@
 package com.sashacorp.springmongojwtapi.models.persistence.user;
 
-/**
- * Entity class representing a user's authority
- * @author matteo
- *
- */
-public class Authority {
+public enum Authority {
 	
-	private String authority;
+	ADMIN, MANAGER, HR, USER, GUEST;
+
 
 	public String getAuthority() {
-		return authority;
+		return this.name();
 	}
 
-	public void setAuthority(String authority) {
-		this.authority = authority;
-	}
-
-	public Authority(String authority) {
-		super();
-		this.authority = authority;
-	}
-
-	public Authority() {
-		super();
-	}
-
-	@Override
-	public String toString() {
-		return "Authority [authority=" + authority + "]";
+	public int getAuthorityLevel() {
+		return this.ordinal();
 	}
 	
-	
+	public static Authority getAuthority(String authority) {
+		switch (authority) {
+		case "ADMIN":
+			return Authority.ADMIN;
+		case "MANAGER":
+			return Authority.MANAGER;
+		case "HR":
+			return Authority.HR;
+		case "USER":
+			return Authority.USER;
+		default:
+			return Authority.GUEST;
+		}
+	}
 
 }

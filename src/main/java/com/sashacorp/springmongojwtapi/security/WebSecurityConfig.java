@@ -17,15 +17,16 @@ import com.sashacorp.springmongojwtapi.filters.JwtRequestFilter;
 
 /**
  * Global security configuration class.
+ * 
  * @author matteo
  *
  */
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private UserDetailsService myUserDetailsService;
-	
+
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
@@ -44,35 +45,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
+
 	/**
-	 * Mappings are secured here.
-	 *<br><span style='color: orange;'>WARNING:</span> Controllers must be annotated with @CrossOrigin to function.
+	 * Mappings are secured here. <br>
+	 * <span style='color: orange;'>WARNING:</span> Controllers must be annotated
+	 * with @CrossOrigin to function.
 	 */
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable()
-				.authorizeRequests().antMatchers("/authenticate").permitAll()
-						.antMatchers().hasAuthority("USER")
-						.antMatchers("/users",
-									"/users/*",
-									"/messages",
-									"/messages/*",
-									"/register",
-									"/admin",
-									"/admin/*"
-									).hasAuthority("ADMIN")
-						
-						.anyRequest().authenticated().and()
-						.exceptionHandling().and().sessionManagement()
+		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/authenticate", "/register").permitAll()
+				.antMatchers("/me", "/me/*").hasAuthority("USER")
+				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/admin", "/admin/*").hasAuthority("ADMIN")
+				.anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		
+
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		/**
-		 * Calling httpSecurity.cors() disables HTTP OPTIONS pre-flight calls for CORS negotiation, allowing us to work with a decoupled front-end.
+		 * Calling httpSecurity.cors() disables HTTP OPTIONS pre-flight calls for CORS
+		 * negotiation, allowing us to work with a decoupled front-end.
 		 */
 		httpSecurity.cors();
 
 	}
-	
+
 }

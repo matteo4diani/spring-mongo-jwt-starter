@@ -15,6 +15,7 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
 /**
  * Custom implementation of Spring's {@link UserDetails} interface
+ * 
  * @author matteo
  *
  */
@@ -24,33 +25,30 @@ public class UserDetailsImpl implements UserDetails {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	
+
 	private String id;
-	
+
 	private String username;
-	
-	
+
 	@JsonIgnore
 	private String password;
-	
+
 	private String email;
-	
+
 	private int internalId;
 
 	private String firstName;
 	private String lastName;
-	
+
 	private String phone;
-	
+
 	private boolean smartWorking;
 	private String position;
-	
+
 	private String site;
 	private Status status;
-	
+
 	private Collection<? extends GrantedAuthority> authorities;
-	
-	
 
 	public UserDetailsImpl(String id, String username, String password, String email, int internalId, String firstName,
 			String lastName, String phone, boolean smartWorking, String position, String site, Status status,
@@ -70,37 +68,26 @@ public class UserDetailsImpl implements UserDetails {
 		this.status = status;
 		this.authorities = authorities;
 	}
-	
+
 	/**
-	 * Builds a Spring-compliant {@link UserDetailsImpl} from a User.
-	 * Each {@link Authority} is converted to a {@link SimpleGrantedAuthority} to make it fungible for Spring Security.
+	 * Builds a Spring-compliant {@link UserDetailsImpl} from a User. Each
+	 * {@link AuthorityOld} is converted to a {@link SimpleGrantedAuthority} to make it
+	 * fungible for Spring Security.
+	 * 
 	 * @param user
 	 * @return
 	 */
 	public static UserDetailsImpl build(User user) {
 		List<GrantedAuthority> authorities = user.getAuthorities().stream()
-				.map(authority -> new SimpleGrantedAuthority(authority.getAuthority()))
-				.collect(Collectors.toList());
+				.map(authority -> new SimpleGrantedAuthority(authority.getAuthority())).collect(Collectors.toList());
 
-		return new UserDetailsImpl(
-				user.getId(), 
-				user.getUsername(), 
-				user.getPassword(), 
-				user.getEmail(),
-				user.getInternalId(),
-				user.getFirstName(),
-				user.getLastName(),
-				user.getPhone(),
-				user.isSmartWorking(),
-				user.getPosition(),
-				user.getSite(),
-				user.getStatus(),
-				authorities);
+		return new UserDetailsImpl(user.getId(), user.getUsername(), user.getPassword(), user.getEmail(),
+				user.getInternalId(), user.getFirstName(), user.getLastName(), user.getPhone(), user.isSmartWorking(),
+				user.getPosition(), user.getSite(), user.getStatus(), authorities);
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
 		return authorities;
 	}
 
@@ -195,6 +182,5 @@ public class UserDetailsImpl implements UserDetails {
 				+ ", smartWorking=" + smartWorking + ", position=" + position + ", site=" + site + ", status=" + status
 				+ ", authorities=" + authorities + "]";
 	}
-	
 
 }

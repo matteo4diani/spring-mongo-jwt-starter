@@ -16,8 +16,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 
 /**
- * API endpoint to send real-time notifications to admins.
- * User-generated notifications are broadcasted to all admins.
+ * API endpoint to send real-time notifications to admins. User-generated
+ * notifications are broadcasted to all admins.
+ * 
  * @author matteo
  *
  */
@@ -29,9 +30,10 @@ public class AdminSseController {
 	}
 
 	private final ConcurrentHashMap<String, SseEmitter> emitters = new ConcurrentHashMap<>();
-	
+
 	/**
 	 * Subscribe to an event stream detailing new user activity
+	 * 
 	 * @param adminId
 	 * @param response
 	 * @return
@@ -49,31 +51,30 @@ public class AdminSseController {
 
 		return emitter;
 	}
-	
+
 	/**
-	 * Event listener for admin notifications.
-	 * <br/>Broadcasts to all subscribed admins a server sent event with 'data': {...adminNotification}.
-	 * <br/>Checks for disconnected emitters and removes them from the emitter pool.
+	 * Event listener for admin notifications. <br/>
+	 * Broadcasts to all subscribed admins a server sent event with 'data':
+	 * {...adminNotification}. <br/>
+	 * Checks for disconnected emitters and removes them from the emitter pool.
+	 * 
 	 * @param adminNotification
 	 */
 	@EventListener
 	public void onAdminNotification(AdminNotificationSse adminNotification) {
 		List<String> deadEmitters = new ArrayList<>();
 
-		
-
 		emitters.keySet().forEach(adminId -> {
 			try {
-					adminNotification.setAdminId(adminId);
-					emitters.get(adminId).send(adminNotification);
+				emitters.get(adminId).send(adminNotification);
 			} catch (Exception e) {
-				deadEmitters.add(adminNotification.getAdminId());
+				deadEmitters.add(adminId);
 			}
 		});
 
 		deadEmitters.forEach(userId -> {
 			this.emitters.remove(userId);
 		});
-		
+
 	}
 }
