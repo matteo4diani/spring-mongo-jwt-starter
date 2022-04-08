@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -18,7 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.MessageResponse;
+import com.sashacorp.springmongojwtapi.models.http.Errors;
+import com.sashacorp.springmongojwtapi.models.http.PlainTextResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationRequest;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.SignupRequest;
@@ -27,6 +29,7 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.security.UserDetailsServiceImpl;
+import com.sashacorp.springmongojwtapi.util.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.JwtUtil;
 
 /**
@@ -41,16 +44,12 @@ public class SecurityController {
 
 	@Autowired
 	private AuthenticationManager authenticationManager;
-
 	@Autowired
 	private JwtUtil jwtTokenUtil;
-
 	@Autowired
 	private PasswordEncoder encoder;
-
 	@Autowired
 	private UserDetailsServiceImpl userDetailsService;
-
 	@Autowired
 	private UserRepository userRepository;
 
@@ -65,21 +64,17 @@ public class SecurityController {
 	@RequestMapping(value = "/authenticate", method = RequestMethod.POST)
 	public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest)
 			throws Exception {
-
 		try {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new Exception("Incorrect username or password", e);
+			throw new Exception(Errors.AUTH_WRONG_CREDENTIALS.text(), e);
 		}
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-
 		final User user = userRepository.findByUsername(userDetails.getUsername());
-
 		final String jwt = jwtTokenUtil.generateToken(userDetails);
-
-		return ResponseEntity.ok(new AuthenticationResponse(jwt, user.getUsername(), user.getAuthorities()));
+		return HttpUtil.getAuthenticationResponse(jwt, user.getUsername(), user.getAuthorities(), HttpStatus.OK);
 	}
 
 	/**
@@ -92,7 +87,7 @@ public class SecurityController {
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return ResponseEntity.badRequest().body(new MessageResponse("Error: Username is already taken!"));
+			return HttpUtil.getPlainTextResponse(Errors.REG_USERNAME_EXISTS.text(), HttpStatus.BAD_REQUEST);
 		}
 
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
@@ -118,7 +113,7 @@ public class SecurityController {
 		final int finalAuthLevel = authorityLevel;
 		
 		if (strAuthority == null || finalAuthLevel == -1) {
-			Authority userAuthority = Authority.getAuthority("GUEST");
+			Authority userAuthority = Authority.GUEST;
 			authorities.add(userAuthority);
 		} else {
 			strAuthority.forEach(authority -> {
@@ -131,8 +126,7 @@ public class SecurityController {
 
 		user.setAuthorities(authorities);
 		userRepository.save(user);
-
-		return ResponseEntity.ok(new MessageResponse("User registered successfully!"));
+		return HttpUtil.getPlainTextResponse("User registered successfully!", HttpStatus.OK);
 	}
 
 }

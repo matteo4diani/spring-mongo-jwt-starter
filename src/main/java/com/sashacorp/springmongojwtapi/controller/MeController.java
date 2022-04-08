@@ -62,14 +62,12 @@ public class MeController {
 			HateoasUtil.setUserResources(user);
 			user.eraseCredentials();
 			StatusUtil.setUserStatus(messageRepository, user);
-			return new ResponseEntity<User>(user, HttpStatus.OK);
+			return HttpUtil.getResponse(user, HttpStatus.OK);
 		}
 
-		return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+		return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
 
 	}
-
-	
 
 	/**
 	 * Get all messages for the current user
@@ -85,19 +83,19 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsernameAndApproval(username, approved),
+			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndApproval(username, approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
-			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsernameAndPending(username, pending),
+			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndPending(username, pending),
 					HttpStatus.OK);
 		} else {
-			return new ResponseEntity<List<Message>>(messageRepository.findByReqUsername(username), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.findByReqUsername(username), HttpStatus.OK);
 		}
 	}
 
@@ -116,22 +114,22 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(
+			return HttpUtil.getResponse(
 					messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
-			return new ResponseEntity<List<Message>>(
+			return HttpUtil.getResponse(
 					messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending),
 					HttpStatus.OK);
 		} else {
-			return new ResponseEntity<List<Message>>(
-					messageRepository.findCurrentByReqUsername(username, TimeUtil.now()), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.findCurrentByReqUsername(username, TimeUtil.now()),
+					HttpStatus.OK);
 		}
 
 	}
@@ -150,12 +148,12 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
-		return new ResponseEntity<List<Message>>(messageRepository.findOngoingByReqUsername(username, TimeUtil.now()),
+		return HttpUtil.getResponse(messageRepository.findOngoingByReqUsername(username, TimeUtil.now()),
 				HttpStatus.OK);
 	}
 
@@ -174,22 +172,22 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
 
 		if (approved != null) {
-			return new ResponseEntity<List<Message>>(
+			return HttpUtil.getResponse(
 					messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
 					HttpStatus.OK);
 		} else if (pending != null) {
-			return new ResponseEntity<List<Message>>(
+			return HttpUtil.getResponse(
 					messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending),
 					HttpStatus.OK);
 		} else {
-			return new ResponseEntity<List<Message>>(
-					messageRepository.findOutdatedReqUsername(username, TimeUtil.now()), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.findOutdatedReqUsername(username, TimeUtil.now()),
+					HttpStatus.OK);
 		}
 	}
 
@@ -205,7 +203,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
@@ -216,9 +214,9 @@ public class MeController {
 			 * of the front-end
 			 */
 			message.setSeen(true);
-			return new ResponseEntity<Message>(messageRepository.save(message), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.save(message), HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
 		}
 	}
 
@@ -236,7 +234,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		User user = userRepository.findByUsername(userDetails.getUsername());
@@ -252,7 +250,7 @@ public class MeController {
 		 * to brew coffee with a teapot.
 		 */
 		if (requestsFromStartToEnd != null && requestsFromStartToEnd.size() > 0) {
-			return new ResponseEntity<List<Message>>(requestsFromStartToEnd, HttpStatus.I_AM_A_TEAPOT);
+			HttpUtil.getResponse(requestsFromStartToEnd, HttpStatus.I_AM_A_TEAPOT);
 		}
 
 		message.setCreated(TimeUtil.now());
@@ -263,7 +261,7 @@ public class MeController {
 		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.POST_USER.text(),
 				user.getId(), user.getUsername(), newMessage.getId(), newMessage);
 		adminNotificationService.getEventPublisher().publishEvent(adminNotificationEvent);
-		return new ResponseEntity<Message>(newMessage, HttpStatus.CREATED);
+		return HttpUtil.getResponse(newMessage, HttpStatus.CREATED);
 	}
 
 	/**
@@ -279,16 +277,16 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getMessageResponse(Errors.USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
 
 		if (userDetails.getUsername().equals(message.getRequirer().getUsername())) {
 			messageRepository.deleteById(messageId);
-			return new ResponseEntity<Void>(HttpStatus.OK);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.OK);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.UNAUTHORIZED);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
 		}
 	}
 }
