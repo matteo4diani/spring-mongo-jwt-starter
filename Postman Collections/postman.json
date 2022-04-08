@@ -1,0 +1,273 @@
+{
+  "info": {
+    "_postman_id": "05ba3752-7f14-4163-ba21-f0c862f4eee2",
+    "name": "shift-management-app",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Login user (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('jwt', pm.response.json().jwt);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "id": "fedc0600-2464-4684-a216-6b7a43e0b267"
+          }
+        }
+      ],
+      "_postman_id": "52ce58ba-1f8f-4b38-ac33-e864e0bd025c",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/authenticate"
+      },
+      "response": []
+    },
+    {
+      "name": "Login user (GUEST)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('jwt', pm.response.json().jwt);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "id": "8b84d8ab-45a4-4a44-be19-2c0aafd37038"
+          }
+        }
+      ],
+      "_postman_id": "9e5c3a4d-66a8-4981-832b-e1cc42087d46",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/authenticate"
+      },
+      "response": []
+    },
+    {
+      "name": "Create user",
+      "_postman_id": "c73450c4-a6cc-410a-aee9-86785056adb7",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": []\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/register"
+      },
+      "response": []
+    },
+    {
+      "name": "Read profile",
+      "_postman_id": "b6d8909d-2e4c-4b26-af1a-c66e9c997e03",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{url}}/me"
+      },
+      "response": []
+    },
+    {
+      "name": "Read messages",
+      "_postman_id": "bd2ef6cd-5948-411c-b609-531d080fc6c6",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": "{{url}}/me/messages"
+      },
+      "response": []
+    },
+    {
+      "name": "Create message",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {\r",
+              "    pm.environment.set('messageId', pm.response.json().id);\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "921e8944-75cd-49f8-be90-f0b6bdf696d6"
+          }
+        }
+      ],
+      "_postman_id": "fdefbc20-3468-4e7a-a2e8-ecdbd3d73785",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"start\": \"2022-04-05T00:00:00\",\r\n    \"end\": \"2022-04-18T23:59:00\",\r\n    \"requestNote\": \"Vado di nuovo in vacanza!\",\r\n    \"leave\": \"LONG\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/me/messages"
+      },
+      "response": []
+    },
+    {
+      "name": "Respond to message (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', pm.response.json().id);\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "ee4c4e9f-18c2-4d23-9a8c-7c3a93378ace"
+          }
+        }
+      ],
+      "_postman_id": "3515b812-3b66-47ff-973b-032f46344c0a",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"approved\": true,\r\n    \"responseNote\": \"Buon divertimento!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete message (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', '');\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "b82939e1-cebb-4a22-ad1c-386c015f8110"
+          }
+        }
+      ],
+      "_postman_id": "2bf981ae-a9b3-4ef4-9a3a-0bac53ce76ee",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": {
+      "token": "{{jwt}}"
+    }
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ],
+        "id": "3b149b00-4fb7-4d6a-b434-969edf8876f8"
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ],
+        "id": "774b7f3f-6da4-4534-a414-17a00327e078"
+      }
+    }
+  ]
+}

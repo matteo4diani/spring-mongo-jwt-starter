@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Leave;
 import com.sashacorp.springmongojwtapi.repository.LeaveRepository;
+import com.sashacorp.springmongojwtapi.util.HttpUtil;
 
 /**
  * API endpoints to manage event (leaves) types
@@ -32,7 +33,7 @@ public class LeaveController {
 	 */
 	@RequestMapping({ "/leaves" })
 	public ResponseEntity<List<Leave>> getAllLeaves() {
-		return new ResponseEntity<List<Leave>>(leaveRepository.findAll(), HttpStatus.OK);
+		return HttpUtil.getResponse(leaveRepository.findAll(), HttpStatus.OK);
 	}
 
 }

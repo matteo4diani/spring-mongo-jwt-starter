@@ -6,10 +6,10 @@ package com.sashacorp.springmongojwtapi.models.http;
  * @author matteo
  *
  */
-public class MessageResponse {
+public class PlainTextResponse {
 	private String message;
 
-	public MessageResponse(String message) {
+	public PlainTextResponse(String message) {
 		this.message = message;
 	}
 
