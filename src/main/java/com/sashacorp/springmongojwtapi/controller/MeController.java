@@ -59,10 +59,9 @@ public class MeController {
 
 		if (userRepository.existsByUsername(userDetails.getUsername())) {
 			User user = userRepository.findByUsername(userDetails.getUsername());
-			HateoasUtil.setUserResources(user);
 			user.eraseCredentials();
 			StatusUtil.setUserStatus(messageRepository, user);
-			return HttpUtil.getResponse(user, HttpStatus.OK);
+			return HttpUtil.getResponse(user, HttpStatus.OK, user);
 		}
 
 		return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
@@ -87,7 +86,7 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
-		//User user = userRepository.findByUsername(username);
+		User user = userRepository.findByUsername(username);
 		if (approved != null) {
 			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndApproval(username, approved),
 					HttpStatus.OK);
@@ -118,6 +117,7 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
+		User user = userRepository.findByUsername(username);
 
 		if (approved != null) {
 			return HttpUtil.getResponse(
@@ -208,7 +208,7 @@ public class MeController {
 
 		Message message = messageRepository.findById(messageId).orElse(null);
 
-		if (userDetails.getUsername().equals(message.getRequirer().getUsername())) {
+		if (userDetails.getUsername().equals(message.getRequester().getUsername())) {
 			/**
 			 * 'seen' is set to true to suppress notification on the user side (non-admin)
 			 * of the front-end
@@ -255,7 +255,7 @@ public class MeController {
 
 		message.setCreated(TimeUtil.now());
 		message.setPending(true);
-		message.setRequirer(user);
+		message.setRequester(user);
 		message.setSeen(true);
 		Message newMessage = messageRepository.save(message);
 		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.POST_USER.text(),
@@ -282,7 +282,7 @@ public class MeController {
 
 		Message message = messageRepository.findById(messageId).orElse(null);
 
-		if (userDetails.getUsername().equals(message.getRequirer().getUsername())) {
+		if (userDetails.getUsername().equals(message.getRequester().getUsername())) {
 			messageRepository.deleteById(messageId);
 			return HttpUtil.getHttpStatusResponse(HttpStatus.OK);
 		} else {

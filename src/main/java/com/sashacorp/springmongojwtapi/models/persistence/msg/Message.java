@@ -10,6 +10,7 @@ import com.sashacorp.springmongojwtapi.controller.MeController;
 import com.sashacorp.springmongojwtapi.controller.MessageController;
 import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
 import com.sashacorp.springmongojwtapi.models.http.resources.Links;
+import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
 /**
@@ -21,7 +22,7 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
  *
  */
 @Document(collection = "messages")
-public class Message implements Hateoas{
+public class Message implements Hateoas, Ownable {
 
 	@Id
 	private String id;
@@ -42,7 +43,7 @@ public class Message implements Hateoas{
 	 */
 	private Boolean seen;
 
-	private User requirer;
+	private User requester;
 	private User responder;
 
 	private String leave;
@@ -117,12 +118,12 @@ public class Message implements Hateoas{
 		this.responded = responded;
 	}
 
-	public User getRequirer() {
-		return requirer;
+	public User getRequester() {
+		return requester;
 	}
 
-	public void setRequirer(User requirer) {
-		this.requirer = requirer;
+	public void setRequester(User requester) {
+		this.requester = requester;
 	}
 
 	public User getResponder() {
@@ -170,11 +171,11 @@ public class Message implements Hateoas{
 	}
 
 	/**
-	 * Helper method to get requirer username with ::
+	 * Helper method to get requester username with ::
 	 */
-	public String fetchRequirerUsernameIfPresent() {
-		if (requirer != null)
-			return requirer.getUsername();
+	public String fetchRequesterUsernameIfPresent() {
+		if (requester != null)
+			return requester.getUsername();
 		else
 			return "";
 	}
@@ -193,8 +194,13 @@ public class Message implements Hateoas{
 	public String replacePathVariables(String url) {
 		return url
 				.replace(placeholder("messageId"), id)
-				.replace(placeholder("username"), requirer.getUsername())
+				.replace(placeholder("username"), requester.getUsername())
 				.replace(placeholder("responderUsername"), responder == null ? "?" : responder.getUsername());
+	}
+
+	@Override
+	public User getOwner() {
+		return requester;
 	}
 
 }

@@ -56,7 +56,5 @@ public class Url {
 	public static final String RESPONDER_BY_USERNAME = USERS + BY_RESPONDER_USERNAME;
 	public static final String USER_AUTHORITIES_BY_USERNAME = USERS + AUTHORITIES + BY_USERNAME;
 	public static final String USER_STATUS_BY_USERNAME = USERS + STATUS + BY_USERNAME;
-	
-	
 
 }

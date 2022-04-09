@@ -49,7 +49,7 @@ public class UserController {
 	public ResponseEntity<?> getUsers() {
 		Map<String, List<Message>> messagesByUser = messageRepository
 				.findOngoing(TimeUtil.now()).parallelStream()
-				.collect(Collectors.groupingBy(Message::fetchRequirerUsernameIfPresent, Collectors.toList()));
+				.collect(Collectors.groupingBy(Message::fetchRequesterUsernameIfPresent, Collectors.toList()));
 		
 		List<User> users = userRepository.findAll().parallelStream().map(user -> {
 			StatusUtil.setUserStatus(messagesByUser, user);

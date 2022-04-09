@@ -350,12 +350,12 @@ public class MessageController {
 		Message updatedMsg = messageRepository.save(requestMsg);
 
 		UserNotificationSse userNotificationEvent = new UserNotificationSse(Notifications.PUT_ADMIN.text(),
-				requestMsg.getRequirer().getId(), requestMsg.getId(), updatedMsg);
+				requestMsg.getRequester().getId(), requestMsg.getId(), updatedMsg);
 
 		userNotificationService.getEventPublisher().publishEvent(userNotificationEvent);
 
 		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.PUT_ADMIN.text(),
-				requestMsg.getRequirer().getId(), requestMsg.getRequirer().getUsername(), requestMsg.getId(),
+				requestMsg.getRequester().getId(), requestMsg.getRequester().getUsername(), requestMsg.getId(),
 				updatedMsg);
 
 		adminNotificationEvent.setAdminId(responder.getId());

@@ -3,7 +3,6 @@ package com.sashacorp.springmongojwtapi.models.persistence.user;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.NoSuchElementException;
 import java.util.Set;
 
 import javax.validation.constraints.NotBlank;
@@ -11,6 +10,7 @@ import javax.validation.constraints.NotBlank;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
 import com.sashacorp.springmongojwtapi.models.http.resources.Links;
 
@@ -27,7 +27,7 @@ import com.sashacorp.springmongojwtapi.models.http.resources.Links;
  *
  */
 @Document(collection = "users")
-public class User implements Hateoas {
+public class User implements Hateoas, Ownable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
@@ -36,6 +36,7 @@ public class User implements Hateoas {
 	@NotBlank
 	private String username;
 	@NotBlank
+	@JsonIgnore
 	private String password;
 
 	private Integer internalId;
@@ -288,6 +289,12 @@ public class User implements Hateoas {
 	}
 	public boolean hasEnoughAuthority(Authority authority) {
 		return authorities == null ? false : getMaxAuthority().getAuthorityLevel() <= authority.getAuthorityLevel();
+	}
+	
+	@JsonIgnore
+	@Override
+	public User getOwner() {
+		return this;
 	}
 
 

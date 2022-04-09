@@ -90,17 +90,17 @@ public class SecurityController {
 
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
 				signUpRequest.getUsername());
-		UserDetails requirerDetails = null;
+		UserDetails requesterDetails = null;
 		int authorityLevel = -1;
 		
 		try {
-			requirerDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+			requesterDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			User requirerAdmin = userRepository.findByUsername(requirerDetails.getUsername());
-			requirerAdmin.eraseCredentials();
+			User requesterAdmin = userRepository.findByUsername(requesterDetails.getUsername());
+			requesterAdmin.eraseCredentials();
 			
-			if (requirerAdmin != null) {				
-				authorityLevel = requirerAdmin.getMaxAuthority().getAuthorityLevel();
+			if (requesterAdmin != null) {				
+				authorityLevel = requesterAdmin.getMaxAuthority().getAuthorityLevel();
 			}
 		} catch(Exception e) {
 			authorityLevel = -1;
