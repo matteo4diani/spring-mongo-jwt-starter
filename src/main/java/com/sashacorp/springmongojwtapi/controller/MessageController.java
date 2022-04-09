@@ -284,8 +284,10 @@ public class MessageController {
 	public ResponseEntity<?> getMessagesBetween(
 			@RequestParam(name = Par.FROM, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
 			@RequestParam(name = Par.TO, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-
-		return HttpUtil.getResponse(messageRepository.findApprovedBetween(from, to), HttpStatus.OK);
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		return HttpUtil.getResponse(messageRepository.findApprovedBetween(from, to), HttpStatus.OK, requester);
 
 	}
 
@@ -303,9 +305,11 @@ public class MessageController {
 	public ResponseEntity<?> getUserMessagesBetween(@PathVariable String username,
 			@RequestParam(name = Par.FROM, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
 			@RequestParam(name = Par.TO, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
 		return HttpUtil.getResponse(messageRepository.findApprovedBetweenByReqUsername(username, from, to),
-				HttpStatus.OK);
+				HttpStatus.OK, requester);
 
 	}
 
@@ -323,8 +327,10 @@ public class MessageController {
 	public ResponseEntity<?> getTeamMessagesBetween(@PathVariable String team,
 			@RequestParam(name = Par.FROM, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime from,
 			@RequestParam(name = Par.TO, required = true) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime to) {
-
-		return HttpUtil.getResponse(messageRepository.findApprovedBetweenByReqTeam(team, from, to), HttpStatus.OK);
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		return HttpUtil.getResponse(messageRepository.findApprovedBetweenByReqTeam(team, from, to), HttpStatus.OK, requester);
 
 	}
 
@@ -385,7 +391,7 @@ public class MessageController {
 		adminNotificationEvent.setAdminId(responder.getId());
 
 		adminNotificationService.getEventPublisher().publishEvent(adminNotificationEvent);
-		return HttpUtil.getResponse(updatedMsg, HttpStatus.OK);
+		return HttpUtil.getResponse(updatedMsg, HttpStatus.OK, responder);
 
 	}
 
