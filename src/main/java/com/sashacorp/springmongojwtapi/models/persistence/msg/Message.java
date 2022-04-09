@@ -6,10 +6,11 @@ import java.util.Map;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.controller.MeController;
 import com.sashacorp.springmongojwtapi.controller.MessageController;
-import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
-import com.sashacorp.springmongojwtapi.models.http.resources.Links;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Hateoas;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Links;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
@@ -197,8 +198,8 @@ public class Message implements Hateoas, Ownable {
 				.replace(placeholder("username"), requester.getUsername())
 				.replace(placeholder("responderUsername"), responder == null ? "?" : responder.getUsername());
 	}
-
 	@Override
+	@JsonIgnore
 	public User getOwner() {
 		return requester;
 	}

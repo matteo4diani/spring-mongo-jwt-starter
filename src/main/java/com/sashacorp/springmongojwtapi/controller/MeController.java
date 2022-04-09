@@ -17,9 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.http.Errors;
 import com.sashacorp.springmongojwtapi.models.http.Notifications;
-import com.sashacorp.springmongojwtapi.models.http.resources.HateoasUtil;
-import com.sashacorp.springmongojwtapi.models.http.resources.Par;
-import com.sashacorp.springmongojwtapi.models.http.resources.Url;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Par;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Url;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
@@ -58,10 +57,10 @@ public class MeController {
 				.getPrincipal();
 
 		if (userRepository.existsByUsername(userDetails.getUsername())) {
-			User user = userRepository.findByUsername(userDetails.getUsername());
-			user.eraseCredentials();
-			StatusUtil.setUserStatus(messageRepository, user);
-			return HttpUtil.getResponse(user, HttpStatus.OK, user);
+			User requester = userRepository.findByUsername(userDetails.getUsername());
+			requester.eraseCredentials();
+			StatusUtil.setUserStatus(messageRepository, requester);
+			return HttpUtil.getResponse(requester, HttpStatus.OK, requester);
 		}
 
 		return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
@@ -86,16 +85,18 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
-		User user = userRepository.findByUsername(username);
+		User requester = userRepository.findByUsername(username);
+		List<Message> messages = null;
+
 		if (approved != null) {
-			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndApproval(username, approved),
-					HttpStatus.OK);
+			messages = messageRepository.findByReqUsernameAndApproval(username, approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndPending(username, pending),
-					HttpStatus.OK);
+			messages = messageRepository.findByReqUsernameAndPending(username, pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findByReqUsername(username), HttpStatus.OK);
+			messages = messageRepository.findByReqUsername(username);
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -117,21 +118,18 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
-		User user = userRepository.findByUsername(username);
+		User requester = userRepository.findByUsername(username);
+		List<Message> messages = null;
 
 		if (approved != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findCurrentByReqUsername(username, TimeUtil.now()),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsername(username, TimeUtil.now());
 		}
 
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -152,9 +150,10 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
+		User requester = userRepository.findByUsername(username);
 
-		return HttpUtil.getResponse(messageRepository.findOngoingByReqUsername(username, TimeUtil.now()),
-				HttpStatus.OK);
+		return HttpUtil.getResponse(messageRepository.findOngoingByReqUsername(username, TimeUtil.now()), HttpStatus.OK,
+				requester);
 	}
 
 	/**
@@ -176,19 +175,18 @@ public class MeController {
 		}
 
 		String username = userDetails.getUsername();
+		User requester = userRepository.findByUsername(username);
 
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findOutdatedReqUsername(username, TimeUtil.now()),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedReqUsername(username, TimeUtil.now());
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -207,6 +205,8 @@ public class MeController {
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
+		String username = userDetails.getUsername();
+		User requester = userRepository.findByUsername(username);
 
 		if (userDetails.getUsername().equals(message.getRequester().getUsername())) {
 			/**
@@ -214,7 +214,7 @@ public class MeController {
 			 * of the front-end
 			 */
 			message.setSeen(true);
-			return HttpUtil.getResponse(messageRepository.save(message), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.save(message), HttpStatus.OK, requester);
 		} else {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.UNAUTHORIZED);
 		}
@@ -237,10 +237,10 @@ public class MeController {
 			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
-		User user = userRepository.findByUsername(userDetails.getUsername());
-		user.eraseCredentials();
-		user.eraseState();
-		List<Message> requestsFromStartToEnd = messageRepository.findBetweenByReqUsername(user.getUsername(),
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		requester.eraseCredentials();
+		requester.eraseState();
+		List<Message> requestsFromStartToEnd = messageRepository.findBetweenByReqUsername(requester.getUsername(),
 				message.getStart(), message.getEnd());
 
 		/*
@@ -250,18 +250,18 @@ public class MeController {
 		 * to brew coffee with a teapot.
 		 */
 		if (requestsFromStartToEnd != null && requestsFromStartToEnd.size() > 0) {
-			HttpUtil.getResponse(requestsFromStartToEnd, HttpStatus.I_AM_A_TEAPOT);
+			HttpUtil.getResponse(requestsFromStartToEnd, HttpStatus.I_AM_A_TEAPOT, requester);
 		}
 
 		message.setCreated(TimeUtil.now());
 		message.setPending(true);
-		message.setRequester(user);
+		message.setRequester(requester);
 		message.setSeen(true);
 		Message newMessage = messageRepository.save(message);
 		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.POST_USER.text(),
-				user.getId(), user.getUsername(), newMessage.getId(), newMessage);
+				requester.getId(), requester.getUsername(), newMessage.getId(), newMessage);
 		adminNotificationService.getEventPublisher().publishEvent(adminNotificationEvent);
-		return HttpUtil.getResponse(newMessage, HttpStatus.CREATED);
+		return HttpUtil.getResponse(newMessage, HttpStatus.CREATED, requester);
 	}
 
 	/**

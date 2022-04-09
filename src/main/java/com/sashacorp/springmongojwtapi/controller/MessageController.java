@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.http.Errors;
 import com.sashacorp.springmongojwtapi.models.http.Notifications;
-import com.sashacorp.springmongojwtapi.models.http.resources.Par;
-import com.sashacorp.springmongojwtapi.models.http.resources.Url;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Par;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Url;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.http.sse.UserNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
@@ -34,7 +34,7 @@ import com.sashacorp.springmongojwtapi.util.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 
 /**
- * Admin API endpoints for request management
+ * HR/Admin API endpoints for request management
  * 
  * @author matteo
  *
@@ -63,13 +63,18 @@ public class MessageController {
 	public ResponseEntity<List<Message>> getMessages(
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(messageRepository.findByApproval(approved), HttpStatus.OK);
+			messages = messageRepository.findByApproval(approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(messageRepository.findByPending(pending), HttpStatus.OK);
+			messages = messageRepository.findByPending(pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findAll(), HttpStatus.OK);
+			messages = messageRepository.findAll();
 		}
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -80,8 +85,11 @@ public class MessageController {
 	 */
 	@RequestMapping(value = Url.MESSAGE_BY_MESSAGE_ID, method = RequestMethod.GET)
 	public ResponseEntity<?> getMessageById(@PathVariable String messageId) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
 		if (messageRepository.existsById(messageId)) {
-			return new ResponseEntity<Message>(messageRepository.findById(messageId).orElse(null), HttpStatus.OK);
+			return HttpUtil.getResponse(messageRepository.findById(messageId).orElse(null), HttpStatus.OK, requester);
 		} else {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
@@ -99,14 +107,19 @@ public class MessageController {
 	public ResponseEntity<List<Message>> getCurrentMessages(
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(messageRepository.findCurrentByApproval(TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByApproval(TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(messageRepository.findCurrentByPending(TimeUtil.now(), pending), HttpStatus.OK);
+			messages = messageRepository.findCurrentByPending(TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findCurrent(TimeUtil.now()), HttpStatus.OK);
+			messages = messageRepository.findCurrent(TimeUtil.now());
 		}
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
+
 	}
 
 	/**
@@ -117,7 +130,10 @@ public class MessageController {
 	 */
 	@RequestMapping(value = Url.ONGOING_MESSAGES, method = RequestMethod.GET)
 	public ResponseEntity<List<Message>> getOngoingMessages() {
-		return HttpUtil.getResponse(messageRepository.findOngoing(TimeUtil.now()), HttpStatus.OK);
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		return HttpUtil.getResponse(messageRepository.findOngoing(TimeUtil.now()), HttpStatus.OK, requester);
 	}
 
 	/**
@@ -132,15 +148,19 @@ public class MessageController {
 	public ResponseEntity<List<Message>> getOutdatedMessages(
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(messageRepository.findOutdatedByApproval(TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedByApproval(TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(messageRepository.findOutdatedByPending(TimeUtil.now(), pending),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedByPending(TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findOutdated(TimeUtil.now()), HttpStatus.OK);
+			messages = messageRepository.findOutdated(TimeUtil.now());
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -158,15 +178,19 @@ public class MessageController {
 	public ResponseEntity<?> getUserMessages(@PathVariable String username,
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndApproval(username, approved),
-					HttpStatus.OK);
+			messages = messageRepository.findByReqUsernameAndApproval(username, approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(messageRepository.findByReqUsernameAndPending(username, pending),
-					HttpStatus.OK);
+			messages = messageRepository.findByReqUsernameAndPending(username, pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findByReqUsername(username), HttpStatus.OK);
+			messages = messageRepository.findByReqUsername(username);
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -184,19 +208,19 @@ public class MessageController {
 	public ResponseEntity<?> getCurrentUserMessages(@PathVariable String username,
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
-
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsernameAndApproval(username, TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsernameAndPending(username, TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findCurrentByReqUsername(username, TimeUtil.now()),
-					HttpStatus.OK);
+			messages = messageRepository.findCurrentByReqUsername(username, TimeUtil.now());
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -231,19 +255,19 @@ public class MessageController {
 	public ResponseEntity<?> getOutdatedUserMessages(@PathVariable String username,
 			@RequestParam(name = Par.PENDING, required = false) Boolean pending,
 			@RequestParam(name = Par.APPROVED, required = false) Boolean approved) {
-
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		List<Message> messages = null;
 		if (approved != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved),
-					HttpStatus.OK);
+			messages = messageRepository.findApprovalByReqUsernameAndApproval(username, TimeUtil.now(), approved);
 		} else if (pending != null) {
-			return HttpUtil.getResponse(
-					messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedByReqUsernameAndPending(username, TimeUtil.now(), pending);
 		} else {
-			return HttpUtil.getResponse(messageRepository.findOutdatedReqUsername(username, TimeUtil.now()),
-					HttpStatus.OK);
+			messages = messageRepository.findOutdatedReqUsername(username, TimeUtil.now());
 		}
+
+		return HttpUtil.getResponse(messages, HttpStatus.OK, requester);
 	}
 
 	/**

@@ -90,41 +90,44 @@ public class SecurityController {
 
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
 				signUpRequest.getUsername());
-		UserDetails requesterDetails = null;
-		int authorityLevel = -1;
-		
+		User requester = null;
+		Authority requesterAuthority;
+
 		try {
-			requesterDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+			UserDetails requesterDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 					.getPrincipal();
-			User requesterAdmin = userRepository.findByUsername(requesterDetails.getUsername());
-			requesterAdmin.eraseCredentials();
-			
-			if (requesterAdmin != null) {				
-				authorityLevel = requesterAdmin.getMaxAuthority().getAuthorityLevel();
-			}
-		} catch(Exception e) {
-			authorityLevel = -1;
+			requester = userRepository.findByUsername(requesterDetails.getUsername());
+
+			requester.eraseCredentials();
+			requesterAuthority = requester.getMaxAuthority();
+
+		} catch (Exception e) {
+			requesterAuthority = Authority.GUEST;
 		}
-		
-		Set<String> strAuthority = signUpRequest.getAuthorities();
+
+		Set<Authority> authorities = buildNewUserAuthorities(requesterAuthority, signUpRequest.getAuthorities());
+
+		user.setAuthorities(authorities);
+		User savedUser = userRepository.save(user);
+		return HttpUtil.getResponse(savedUser, HttpStatus.OK, requester);
+	}
+
+	public Set<Authority> buildNewUserAuthorities(Authority requesterAuthority, Set<String> stringAuthorities) {
 		Set<Authority> authorities = new HashSet<>();
-		final int finalAuthLevel = authorityLevel;
-		
-		if (strAuthority == null || finalAuthLevel == -1) {
+		final int finalAuthLevel = requesterAuthority.getAuthorityLevel();
+
+		if (stringAuthorities == null || requesterAuthority.equals(Authority.GUEST)) {
 			Authority userAuthority = Authority.GUEST;
 			authorities.add(userAuthority);
 		} else {
-			strAuthority.forEach(authority -> {
-					Authority internalAuthority = Authority.getAuthority(authority);
-					if (internalAuthority.getAuthorityLevel() >= finalAuthLevel) {						
-						authorities.add(internalAuthority);
-					}
+			stringAuthorities.forEach(authority -> {
+				Authority internalAuthority = Authority.getAuthority(authority);
+				if (internalAuthority.getAuthorityLevel() >= finalAuthLevel) {
+					authorities.add(internalAuthority);
+				}
 			});
 		}
-
-		user.setAuthorities(authorities);
-		userRepository.save(user);
-		return HttpUtil.getPlainTextResponse("User registered successfully!", HttpStatus.OK);
+		return authorities;
 	}
 
 }

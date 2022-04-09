@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.http.resources;
+package com.sashacorp.springmongojwtapi.models.http.hateoas;
 
 import java.util.Comparator;
 import java.util.List;

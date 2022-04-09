@@ -8,8 +8,8 @@ import org.springframework.http.ResponseEntity;
 
 import com.sashacorp.springmongojwtapi.models.http.PlainTextResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationResponse;
-import com.sashacorp.springmongojwtapi.models.http.resources.Hateoas;
-import com.sashacorp.springmongojwtapi.models.http.resources.HateoasUtil;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.Hateoas;
+import com.sashacorp.springmongojwtapi.models.http.hateoas.HateoasUtil;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
@@ -32,15 +32,24 @@ public class HttpUtil {
 	public static <T> ResponseEntity<T> getResponse(T obj, HttpStatus httpStatus) {
 		return new ResponseEntity<T>(obj, httpStatus);
 	}
+
 	public static <T> ResponseEntity<List<T>> getResponse(List<T> obj, HttpStatus httpStatus) {
 		return new ResponseEntity<List<T>>(obj, httpStatus);
 	}
-	public static <T extends Hateoas & Ownable> ResponseEntity<T> getResponse(T obj, HttpStatus httpStatus, User requester) {
-		HateoasUtil.hateoas(obj, requester);
+
+	public static <T extends Hateoas & Ownable> ResponseEntity<T> getResponse(T obj, HttpStatus httpStatus,
+			User requester) {
+		if (obj != null && requester != null) {
+			HateoasUtil.hateoas(obj, requester);
+		}
 		return new ResponseEntity<T>(obj, httpStatus);
 	}
-	public static <T extends Hateoas & Ownable> ResponseEntity<List<T>> getResponse(List<T> obj, HttpStatus httpStatus, User requester) {
-		HateoasUtil.hateoas(obj, requester);
+
+	public static <T extends Hateoas & Ownable> ResponseEntity<List<T>> getResponse(List<T> obj, HttpStatus httpStatus,
+			User requester) {
+		if (obj != null && requester != null) {
+			HateoasUtil.hateoas(obj, requester);
+		}
 		return new ResponseEntity<List<T>>(obj, httpStatus);
 	}
 }

@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.http.resources;
+package com.sashacorp.springmongojwtapi.models.http.hateoas;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Leave;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;

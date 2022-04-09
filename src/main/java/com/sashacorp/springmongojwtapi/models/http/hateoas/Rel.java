@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.http.resources;
+package com.sashacorp.springmongojwtapi.models.http.hateoas;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
