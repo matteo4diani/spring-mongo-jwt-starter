@@ -22,7 +22,7 @@
           }
         }
       ],
-      "_postman_id": "52ce58ba-1f8f-4b38-ac33-e864e0bd025c",
+      "id": "52ce58ba-1f8f-4b38-ac33-e864e0bd025c",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -62,7 +62,7 @@
           }
         }
       ],
-      "_postman_id": "9e5c3a4d-66a8-4981-832b-e1cc42087d46",
+      "id": "9e5c3a4d-66a8-4981-832b-e1cc42087d46",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -87,7 +87,7 @@
     },
     {
       "name": "Create user",
-      "_postman_id": "c73450c4-a6cc-410a-aee9-86785056adb7",
+      "id": "c73450c4-a6cc-410a-aee9-86785056adb7",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -96,7 +96,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": []\r\n}",
+          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -109,7 +109,7 @@
     },
     {
       "name": "Read profile",
-      "_postman_id": "b6d8909d-2e4c-4b26-af1a-c66e9c997e03",
+      "id": "b6d8909d-2e4c-4b26-af1a-c66e9c997e03",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -122,7 +122,7 @@
     },
     {
       "name": "Read messages",
-      "_postman_id": "bd2ef6cd-5948-411c-b609-531d080fc6c6",
+      "id": "bd2ef6cd-5948-411c-b609-531d080fc6c6",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -149,7 +149,7 @@
           }
         }
       ],
-      "_postman_id": "fdefbc20-3468-4e7a-a2e8-ecdbd3d73785",
+      "id": "fdefbc20-3468-4e7a-a2e8-ecdbd3d73785",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -185,7 +185,7 @@
           }
         }
       ],
-      "_postman_id": "3515b812-3b66-47ff-973b-032f46344c0a",
+      "id": "3515b812-3b66-47ff-973b-032f46344c0a",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
@@ -221,7 +221,7 @@
           }
         }
       ],
-      "_postman_id": "2bf981ae-a9b3-4ef4-9a3a-0bac53ce76ee",
+      "id": "2bf981ae-a9b3-4ef4-9a3a-0bac53ce76ee",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
