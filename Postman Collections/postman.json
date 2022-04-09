@@ -86,6 +86,46 @@
       "response": []
     },
     {
+      "name": "Login user (GUEST) Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('jwt', pm.response.json().jwt);\r",
+              "}\r",
+              ""
+            ],
+            "type": "text/javascript",
+            "id": "0bd182f8-67fc-4c15-af6e-45fa5af5cfff"
+          }
+        }
+      ],
+      "id": "6a99cb18-cd0f-48c5-9bd8-9312dec674de",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/authenticate"
+      },
+      "response": []
+    },
+    {
       "name": "Create user",
       "id": "c73450c4-a6cc-410a-aee9-86785056adb7",
       "protocolProfileBehavior": {
@@ -238,46 +278,6 @@
           }
         },
         "url": "{{url}}/messages/id/{{messageId}}"
-      },
-      "response": []
-    },
-    {
-      "name": "Login user (GUEST) Copy",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "if (pm.response.code === 200) {\r",
-              "    pm.environment.set('jwt', pm.response.json().jwt);\r",
-              "}\r",
-              ""
-            ],
-            "type": "text/javascript",
-            "id": "0bd182f8-67fc-4c15-af6e-45fa5af5cfff"
-          }
-        }
-      ],
-      "id": "6a99cb18-cd0f-48c5-9bd8-9312dec674de",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/authenticate"
       },
       "response": []
     }
