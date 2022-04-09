@@ -91,14 +91,14 @@
         {
           "listen": "test",
           "script": {
+            "id": "0bd182f8-67fc-4c15-af6e-45fa5af5cfff",
             "exec": [
               "if (pm.response.code === 200) {\r",
               "    pm.environment.set('jwt', pm.response.json().jwt);\r",
               "}\r",
               ""
             ],
-            "type": "text/javascript",
-            "id": "0bd182f8-67fc-4c15-af6e-45fa5af5cfff"
+            "type": "text/javascript"
           }
         }
       ],
@@ -114,7 +114,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
+          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
