@@ -1,13 +1,26 @@
 package com.sashacorp.springmongojwtapi.util.http.hateoas;
-
+/**
+ * The only source for entity URL mappings, keeping the URLs made of {@code public static final String}s (i.e. constant expressions in Java)
+ * allows URLs to be parametrized and shared across resources.
+ * Controllers and {@link HateoasUtil} share the same set of URLs and HATEOAS-compliant resource representation can be handled automatically, see {@link Rel}
+ * @author matteo
+ *
+ */
 public class Url {
 	
 	/*
 	 * Building blocks
 	 */
+	
+	/*
+	 * entities
+	 */
 	public static final String MESSAGES = "/messages";
 	public static final String USERS = "/users";
 
+	/*
+	 * modifiers
+	 */
 	public static final String CURRENT = "/current";
 	public static final String ONGOING = "/ongoing";
 	public static final String OUTDATED = "/outdated";

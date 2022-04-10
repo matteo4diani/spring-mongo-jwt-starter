@@ -14,14 +14,14 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 public class HateoasUtil {
 	
 	public static <T extends Ownable & Hateoas> void setOwnedResources(T obj, User user) {
-		boolean objIsFromUser = obj.getOwner().getUsername().equals(user.getUsername());
+		boolean objIsOwnedByUser = obj.getOwner().getUsername().equals(user.getUsername());
 		MimeTypes type = getMimeType(obj);
 		
 		if (type != null) {			
 			Map<String, String> adminResources = Rel.ResourceUtil.get(type, Authority.HR);
 			Map<String, String> userResources = Rel.ResourceUtil.get(type, Authority.USER);
 			
-			if (user.hasEnoughAuthority(Authority.HR) && objIsFromUser) {
+			if (user.hasEnoughAuthority(Authority.HR) && objIsOwnedByUser) {
 				Map<String, String> resources = Stream.of(adminResources, userResources)
 						.flatMap(map -> map.entrySet().stream())
 						.sorted(Comparator.comparing(Map.Entry::getKey))
@@ -29,7 +29,7 @@ public class HateoasUtil {
 				obj.setResources(resources);
 			} else if (user.hasEnoughAuthority(Authority.HR)) {
 				obj.setResources(adminResources);
-			} else if (objIsFromUser) {
+			} else if (objIsOwnedByUser) {
 				obj.setResources(userResources);			
 			}
 		}

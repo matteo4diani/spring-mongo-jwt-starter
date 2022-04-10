@@ -1,6 +1,5 @@
 package com.sashacorp.springmongojwtapi.controller;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,9 +24,10 @@ import com.sashacorp.springmongojwtapi.models.http.auth.SignupRequest;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
+import com.sashacorp.springmongojwtapi.security.AuthorityUtil;
+import com.sashacorp.springmongojwtapi.security.JwtUtil;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.security.UserDetailsServiceImpl;
-import com.sashacorp.springmongojwtapi.util.JwtUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
 
 /**
@@ -105,29 +105,13 @@ public class SecurityController {
 			requesterAuthority = Authority.GUEST;
 		}
 
-		Set<Authority> authorities = buildNewUserAuthorities(requesterAuthority, signUpRequest.getAuthorities());
+		Set<Authority> authorities = AuthorityUtil.buildAuthorities(requesterAuthority, signUpRequest.getAuthorities());
 
 		user.setAuthorities(authorities);
 		User savedUser = userRepository.save(user);
 		return HttpUtil.getResponse(savedUser, HttpStatus.OK, requester);
 	}
-
-	public Set<Authority> buildNewUserAuthorities(Authority requesterAuthority, Set<String> stringAuthorities) {
-		Set<Authority> authorities = new HashSet<>();
-		final int finalAuthLevel = requesterAuthority.getAuthorityLevel();
-
-		if (stringAuthorities == null || requesterAuthority.equals(Authority.GUEST)) {
-			Authority userAuthority = Authority.GUEST;
-			authorities.add(userAuthority);
-		} else {
-			stringAuthorities.forEach(authority -> {
-				Authority internalAuthority = Authority.getAuthority(authority);
-				if (internalAuthority.getAuthorityLevel() >= finalAuthLevel) {
-					authorities.add(internalAuthority);
-				}
-			});
-		}
-		return authorities;
-	}
+	
+	
 
 }

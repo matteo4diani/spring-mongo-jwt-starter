@@ -22,7 +22,7 @@ Just import in Eclipse as 'Existing Maven Project'. You need a running MongoDB i
 ### To Do #2
 
 - Build test suite and environment
-- Build init phase
+- Build init phase - ✔️ - [https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html](https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html)
 - Setup GitHub->Heroku CI/CD
 - Implement queries by responder
 - Implement Vue front-end

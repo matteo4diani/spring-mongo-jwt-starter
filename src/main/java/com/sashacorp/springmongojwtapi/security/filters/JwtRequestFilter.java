@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.filters;
+package com.sashacorp.springmongojwtapi.security.filters;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,8 +8,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import com.sashacorp.springmongojwtapi.security.JwtUtil;
 import com.sashacorp.springmongojwtapi.security.UserDetailsServiceImpl;
-import com.sashacorp.springmongojwtapi.util.JwtUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;

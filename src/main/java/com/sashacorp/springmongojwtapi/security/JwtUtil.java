@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.util;
+package com.sashacorp.springmongojwtapi.security;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -9,13 +9,17 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
+import com.sashacorp.springmongojwtapi.security.filters.JwtRequestFilter;
+
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 /**
  * Util class for creating, validating and manipulating JSON Web Tokens
- * 
+ * Exposed as a {@link Service} so it can be discovered by Spring and {@link Autowired} in {@link JwtRequestFilter}.
+ * Example of <b>Dependency Injection</b> in action, as this class ({@link JwtUtil}) holds a {@code SECRET_KEY} initialized at instance creation.
+ * If it was a {@code static} util (like {@link HateoasUtil} or {@link HttpUtil} it would be initialized at context creation and available application-wide
  * @author matteo
  *
  */
