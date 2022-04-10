@@ -6,6 +6,28 @@
   },
   "item": [
     {
+      "name": "Startup",
+      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/register"
+      },
+      "response": []
+    },
+    {
       "name": "Login user (ADMIN)",
       "event": [
         {
@@ -88,28 +110,6 @@
     {
       "name": "Create user",
       "id": "c73450c4-a6cc-410a-aee9-86785056adb7",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/register"
-      },
-      "response": []
-    },
-    {
-      "name": "Startup",
-      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
       },
