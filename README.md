@@ -16,13 +16,13 @@ Just import in Eclipse as 'Existing Maven Project'. You need a running MongoDB i
 - Implement ENUMS where we have hardcoded collections of sort - ✔️
 - Implement a generic and ultralight-weight HATEOAS framework (see package util.http and util.http.hateoas) - ✔️
 - Abstract away encumbering third-party libraries/method calls - ✔️
-- Add postman collection - ✔️ - [https://apitransform.com/how-to-add-postman-collection-to-github/](https://apitransform.com/how-to-add-postman-collection-to-github/)
+- Add postman collection - ✔️ - [How to add postman collection](https://apitransform.com/how-to-add-postman-collection-to-github/)
 
 
 ### To Do #2
 
 - Build test suite and environment
-- Build init phase - ✔️ - [https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html](https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html)
+- Build init phase - ✔️ - [How to add SPEL conditional expressions to Spring configurators](https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html) - [How to schedule startup event listeners](https://stackoverflow.com/questions/27405713/running-code-after-spring-boot-starts)
 - Setup GitHub->Heroku CI/CD
 - Implement queries by responder
 - Implement Vue front-end
