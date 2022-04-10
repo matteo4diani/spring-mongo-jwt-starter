@@ -37,10 +37,15 @@ public class EventTypeController {
 	public ResponseEntity<List<EventType>> getAllEventTypes() {
 		return HttpUtil.getResponse(eventTypeRepository.findAll(), HttpStatus.OK);
 	}
+	/**
+	 * Post a new event type
+	 * @param eventType
+	 * @return
+	 */
 	@PostMapping({ "/events" })
 	public ResponseEntity<EventType> postEventType(@RequestBody EventType eventType) {
-		if (eventTypeRepository.existsByName(eventType.getName())) {
-			return HttpUtil.getResponse(eventTypeRepository.findByName(eventType.getName()), HttpStatus.FORBIDDEN);
+		if (eventTypeRepository.existsByType(eventType.getType())) {
+			return HttpUtil.getResponse(eventTypeRepository.findByType(eventType.getType()), HttpStatus.FORBIDDEN);
 		}
 		return HttpUtil.getResponse(eventTypeRepository.save(eventType), HttpStatus.OK);
 	}

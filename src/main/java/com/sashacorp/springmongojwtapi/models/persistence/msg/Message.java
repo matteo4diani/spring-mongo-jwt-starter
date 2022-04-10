@@ -15,7 +15,7 @@ import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
 
 /**
- * Represents a request for a generic eventType. The message begins in
+ * Represents a request for a generic event type. The message begins in
  * {@link MeController} with 'pending'=true and is approved or rejected by an
  * ADMIN, MANAGER or HR via {@link MessageController}.
  * 

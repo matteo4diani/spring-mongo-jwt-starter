@@ -2,6 +2,11 @@ package com.sashacorp.springmongojwtapi.appconfig;
 
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
+/**
+ * Utility class representing the response after a clean startup
+ * @author matteo
+ *
+ */
 public class StartupResponse {
 	private User admin;
 	private AppConfiguration appConfig;

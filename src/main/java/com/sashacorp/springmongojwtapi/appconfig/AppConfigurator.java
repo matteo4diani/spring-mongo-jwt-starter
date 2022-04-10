@@ -20,6 +20,12 @@ public class AppConfigurator {
 	@Autowired
 	EventTypeRepository eventTypeRepository;
 	
+	/**
+	 * Get current application configuration. 
+	 * If none is found, a blank config is generated and returned.
+	 * If more than one config is found, the first one is returned and the rest are deleted.
+	 * @return
+	 */
 	public AppConfiguration getAppConfiguration() {
 		List<AppConfiguration> configs = appConfigRepository.findAll();
 		if (configs == null || configs.isEmpty()) 
@@ -31,6 +37,12 @@ public class AppConfigurator {
 		}
 		return configs.get(0); 
 	}
+	
+	/**
+	 * Save an application configuration to persistence
+	 * @param appConfig
+	 * @return
+	 */
 	public AppConfiguration setAppConfiguration(AppConfiguration appConfig) {
 		List<AppConfiguration> configs = appConfigRepository.findAll();
 		
@@ -45,6 +57,10 @@ public class AppConfigurator {
 		return !getAppConfiguration().isInitialized();
 	}
 	
+	/**
+	 * Initializes the event types repository with basic defaults
+	 * @return
+	 */
 	public List<EventType> initEventTypeRepository() {
 		List<EventType> defaultEventTypes = new ArrayList<>();
 		defaultEventTypes.add(new EventType(DefaultStatus.LONG.type(), DefaultStatus.LONG.description()));

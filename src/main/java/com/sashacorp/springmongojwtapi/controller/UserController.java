@@ -182,6 +182,11 @@ public class UserController {
 		return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
 
 	}
+	/**
+	 * Delete user and all its data (messages)
+	 * @param username
+	 * @return
+	 */
 	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.DELETE)
 	public ResponseEntity<?> deleteUser(@PathVariable String username) {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()

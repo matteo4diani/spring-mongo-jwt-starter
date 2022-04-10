@@ -1,5 +1,10 @@
 package com.sashacorp.springmongojwtapi.models.http;
 
+/**
+ * Utility enum to centralize custom errors
+ * @author matteo
+ *
+ */
 public enum Error {
 	ERROR("Error: Something went wrong!"), AUTH_USERNAME_NOT_FOUND("Authentication Error: Username not found!"),
 	AUTH_WRONG_CREDENTIALS("Authentication Error: Incorrect username or password!"),

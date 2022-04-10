@@ -1,7 +1,7 @@
 package com.sashacorp.springmongojwtapi.models.persistence.user;
 
 /**
- * A collection of default status, corresponding to default event types
+ * A collection of default statuses, corresponding to default event types
  * @author matteo
  *
  */

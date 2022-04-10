@@ -23,7 +23,11 @@ import com.sashacorp.springmongojwtapi.util.http.Par;
 import com.sashacorp.springmongojwtapi.util.http.Url;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.HateoasUtil;
 
-
+/**
+ * API endpoints to manage application configuration
+ * @author matteo
+ *
+ */
 @RestController
 @CrossOrigin
 public class AppConfiguratorController {
@@ -55,6 +59,7 @@ public class AppConfiguratorController {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.FORBIDDEN);
 		}
 		
+		appConfigurator.initEventTypeRepository();
 		
 		User user = new User(startupRequest.getUsername(), encoder.encode(startupRequest.getPassword()),
 				startupRequest.getUsername());

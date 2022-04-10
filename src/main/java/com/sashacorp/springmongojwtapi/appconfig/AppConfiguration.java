@@ -2,7 +2,11 @@ package com.sashacorp.springmongojwtapi.appconfig;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-
+/**
+ * Entity class representing application-wide configuration and state
+ * @author matteo
+ *
+ */
 @Document(collection = "appconfig")
 public class AppConfiguration {
 	@Id

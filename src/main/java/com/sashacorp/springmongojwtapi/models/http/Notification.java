@@ -1,5 +1,10 @@
 package com.sashacorp.springmongojwtapi.models.http;
 
+/**
+ * Utility enum to centralize custom notification types and structure
+ * @author matteo
+ *
+ */
 public enum Notification {
 	POST_USER("POST", "USER"), PUT_ADMIN("PUT", "ADMIN"), DELETE_ADMIN("DELETE", "ADMIN"), DELETE_USER("DELETE", "USER");
 

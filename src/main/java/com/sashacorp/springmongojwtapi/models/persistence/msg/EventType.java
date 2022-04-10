@@ -4,8 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * This class is to be used by the user agent to understand and internationalize
- * the 'eventType' property of {@link Message}
+ * Entity class offering a detailed representation/mold for the 'eventType' property of {@link Message}
  * 
  * @author matteo
  *
@@ -16,7 +15,7 @@ public class EventType {
 	@Id
 	private String id;
 
-	private String name;
+	private String type;
 
 	private String description;
 
@@ -24,9 +23,9 @@ public class EventType {
 		super();
 	}
 
-	public EventType(String name, String description) {
+	public EventType(String type, String description) {
 		super();
-		this.name = name;
+		this.type = type;
 		this.description = description;
 	}
 
@@ -39,12 +38,12 @@ public class EventType {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getType() {
+		return type;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getDescription() {
