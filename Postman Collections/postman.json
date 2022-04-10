@@ -276,6 +276,28 @@
         "url": "{{url}}/messages/id/{{messageId}}"
       },
       "response": []
+    },
+    {
+      "name": "Create user Copy",
+      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/register"
+      },
+      "response": []
     }
   ],
   "auth": {
