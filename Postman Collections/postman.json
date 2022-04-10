@@ -246,42 +246,6 @@
       "response": []
     },
     {
-      "name": "Delete message (ADMIN)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "if (pm.response.code === 200) {\r",
-              "    pm.environment.set('messageId', '');\r",
-              "}"
-            ],
-            "type": "text/javascript",
-            "id": "b82939e1-cebb-4a22-ad1c-386c015f8110"
-          }
-        }
-      ],
-      "id": "2bf981ae-a9b3-4ef4-9a3a-0bac53ce76ee",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "DELETE",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/messages/id/{{messageId}}"
-      },
-      "response": []
-    },
-    {
       "name": "Respond to message (ADMIN) Copy",
       "event": [
         {
@@ -307,6 +271,42 @@
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"approved\": true,\r\n    \"responseNote\": \"Buon divertimento!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete message (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', '');\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "b82939e1-cebb-4a22-ad1c-386c015f8110"
+          }
+        }
+      ],
+      "id": "2bf981ae-a9b3-4ef4-9a3a-0bac53ce76ee",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
           "options": {
             "raw": {
               "language": "json"
