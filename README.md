@@ -13,12 +13,16 @@ Just import in Eclipse as 'Existing Maven Project'. You need a running MongoDB i
 # DevLog
 
 ### To Do #1
-1. Implement ENUMS where we have hardcoded collections of sort - DONE
-2. Implement HATEOAS on relevant entities - ONGOING
-3. Abstract away third-party libraries - DONE TO SATISFACTION
-4. Build init phase
-5. Build test suite and environment
-6. Implement front-end
-7. Setup GitHub CI/CD
-8. Add postman collection - ONGOING - [https://apitransform.com/how-to-add-postman-collection-to-github/](https://apitransform.com/how-to-add-postman-collection-to-github/)
+- Implement ENUMS where we have hardcoded collections of sort - ✔️
+- Implement a generic and ultralight-weight HATEOAS framework (see package util.http and util.http.hateoas) - ✔️
+- Abstract away encumbering third-party libraries/method calls - ✔️
+- Add postman collection - ✔️ - [https://apitransform.com/how-to-add-postman-collection-to-github/](https://apitransform.com/how-to-add-postman-collection-to-github/)
 
+
+### To Do #2
+
+- Build test suite and environment
+- Build init phase
+- Setup GitHub->Heroku CI/CD
+- Implement queries by responder
+- Implement Vue front-end

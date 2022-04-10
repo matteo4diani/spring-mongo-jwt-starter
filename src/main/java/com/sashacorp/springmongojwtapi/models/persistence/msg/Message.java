@@ -1,12 +1,18 @@
 package com.sashacorp.springmongojwtapi.models.persistence.msg;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.controller.MeController;
+import com.sashacorp.springmongojwtapi.controller.MessageController;
+import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
 
 /**
  * Represents a request for a generic leave. The message begins in
@@ -17,7 +23,7 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
  *
  */
 @Document(collection = "messages")
-public class Message {
+public class Message implements Hateoas, Ownable {
 
 	@Id
 	private String id;
@@ -38,10 +44,12 @@ public class Message {
 	 */
 	private Boolean seen;
 
-	private User requirer;
+	private User requester;
 	private User responder;
 
 	private String leave;
+
+	private Links _resources = null;
 
 	public void setLeave(String leave) {
 		this.leave = leave;
@@ -111,12 +119,12 @@ public class Message {
 		this.responded = responded;
 	}
 
-	public User getRequirer() {
-		return requirer;
+	public User getRequester() {
+		return requester;
 	}
 
-	public void setRequirer(User requirer) {
-		this.requirer = requirer;
+	public void setRequester(User requester) {
+		this.requester = requester;
 	}
 
 	public User getResponder() {
@@ -164,13 +172,36 @@ public class Message {
 	}
 
 	/**
-	 * Helper method to get requirer username with ::
+	 * Helper method to get requester username with ::
 	 */
-	public String fetchRequirerUsernameIfPresent() {
-		if (requirer != null)
-			return requirer.getUsername();
+	public String fetchRequesterUsernameIfPresent() {
+		if (requester != null)
+			return requester.getUsername();
 		else
 			return "";
+	}
+
+	@Override
+	public Links get_resources() {
+		return _resources;
+	}
+
+	@Override
+	public void setResources(Map<String, String> uris) {
+		this._resources = computeResources(uris);
+	}
+
+	@Override
+	public String replacePathVariables(String url) {
+		return url
+				.replace(placeholder("messageId"), id)
+				.replace(placeholder("username"), requester.getUsername())
+				.replace(placeholder("responderUsername"), responder == null ? "?" : responder.getUsername());
+	}
+	@Override
+	@JsonIgnore
+	public User getOwner() {
+		return requester;
 	}
 
 }

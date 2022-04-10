@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.http.resources;
+package com.sashacorp.springmongojwtapi.util.http.hateoas;
 
 public class Par {
 	public static final String PENDING = "pending";

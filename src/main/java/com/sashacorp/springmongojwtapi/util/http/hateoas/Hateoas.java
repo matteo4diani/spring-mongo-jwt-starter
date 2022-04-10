@@ -1,7 +1,9 @@
-package com.sashacorp.springmongojwtapi.models.http.resources;
+package com.sashacorp.springmongojwtapi.util.http.hateoas;
 
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Rel.MimeUtil;
 
 public interface Hateoas {
 
@@ -13,7 +15,7 @@ public interface Hateoas {
 
 	default Links computeResources(Map<String, String> uris) {
 		return new Links(uris.entrySet().stream().collect(
-				Collectors.toMap(entry -> entry.getKey(), entry -> new Link(replacePathVariables(entry.getValue())))));
+				Collectors.toMap(entry -> entry.getKey(), entry -> new Link(replacePathVariables(entry.getValue()), MimeUtil.mime(entry.getValue())))));
 	}
 
 	default String placeholder(String placeholder) {

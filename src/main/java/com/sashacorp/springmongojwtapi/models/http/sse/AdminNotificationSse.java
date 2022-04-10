@@ -18,9 +18,9 @@ public class AdminNotificationSse {
 
 	private final String type;
 
-	private final String requirerId;
+	private final String requesterId;
 
-	private final String requirerUsername;
+	private final String requesterUsername;
 
 	private final String messageId;
 
@@ -37,17 +37,17 @@ public class AdminNotificationSse {
 	/**
 	 * 
 	 * @param type
-	 * @param requirerId
-	 * @param requirerUsername
+	 * @param requesterId
+	 * @param requesterUsername
 	 * @param messageId
 	 * @param message
 	 */
-	public AdminNotificationSse(String type, String requirerId, String requirerUsername, String messageId,
+	public AdminNotificationSse(String type, String requesterId, String requesterUsername, String messageId,
 			Message message) {
 		super();
 		this.type = type;
-		this.requirerId = requirerId;
-		this.requirerUsername = requirerUsername;
+		this.requesterId = requesterId;
+		this.requesterUsername = requesterUsername;
 		this.messageId = messageId;
 		this.message = message;
 		this.created = TimeUtil.now();
@@ -72,7 +72,7 @@ public class AdminNotificationSse {
 	}
 
 	public String getUsername() {
-		return requirerId;
+		return requesterId;
 	}
 
 	public String getMessageId() {
@@ -83,12 +83,12 @@ public class AdminNotificationSse {
 		return created;
 	}
 
-	public String getRequirerId() {
-		return requirerId;
+	public String getRequesterId() {
+		return requesterId;
 	}
 
-	public String getRequirerUsername() {
-		return requirerUsername;
+	public String getRequesterUsername() {
+		return requesterUsername;
 	}
 
 	/**

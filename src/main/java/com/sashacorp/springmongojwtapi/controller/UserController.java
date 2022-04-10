@@ -9,6 +9,8 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,15 +18,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.resources.Url;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
+import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
+import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
 
 /**
  * Admin API endpoints for user management
@@ -47,17 +51,19 @@ public class UserController {
 	 */
 	@RequestMapping(value = Url.USERS, method = RequestMethod.GET)
 	public ResponseEntity<?> getUsers() {
-		Map<String, List<Message>> messagesByUser = messageRepository
-				.findOngoing(TimeUtil.now()).parallelStream()
-				.collect(Collectors.groupingBy(Message::fetchRequirerUsernameIfPresent, Collectors.toList()));
-		
+		Map<String, List<Message>> messagesByUser = messageRepository.findOngoing(TimeUtil.now()).parallelStream()
+				.collect(Collectors.groupingBy(Message::fetchRequesterUsernameIfPresent, Collectors.toList()));
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+
 		List<User> users = userRepository.findAll().parallelStream().map(user -> {
 			StatusUtil.setUserStatus(messagesByUser, user);
 			user.eraseCredentials();
 			return user;
 		}).collect(Collectors.toList());
-		
-		return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+
+		return HttpUtil.getResponse(users, HttpStatus.OK, requester);
 	}
 
 	/**
@@ -68,13 +74,17 @@ public class UserController {
 	 */
 	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.GET)
 	public ResponseEntity<?> getUser(@PathVariable String username) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+
 		if (userRepository.existsByUsername(username)) {
 			User user = userRepository.findByUsername(username);
 			StatusUtil.setUserStatus(messageRepository, user);
 			user.eraseCredentials();
-			return new ResponseEntity<User>(user, HttpStatus.OK);
+			return HttpUtil.getResponse(user, HttpStatus.OK, requester);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -88,15 +98,19 @@ public class UserController {
 	 */
 	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserData(@PathVariable String username, @RequestBody User userFromRequest) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+
 		if (userRepository.existsByUsername(username)) {
 			User userToUpdate = userRepository.findByUsername(username);
 			userToUpdate.mergeWith(userFromRequest);
 			User updatedUser = userRepository.save(userToUpdate);
 			StatusUtil.setUserStatus(messageRepository, updatedUser);
 			updatedUser.eraseCredentials();
-			return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
+			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -112,22 +126,26 @@ public class UserController {
 	@RequestMapping(value = Url.USER_AUTHORITIES_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserAuthorities(@PathVariable String username,
 			@RequestBody Set<String> authoritiesFromRequest) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+
 		if (userRepository.existsByUsername(username)) {
 			User userToUpdate = userRepository.findByUsername(username);
 			Set<Authority> authorities = new HashSet<>();
-			
+
 			authoritiesFromRequest.forEach(authority -> {
 				Authority internalAuthority = Authority.getAuthority(authority);
 				authorities.add(internalAuthority);
 			});
-			
+
 			userToUpdate.setAuthorities(authorities);
 			User updatedUser = userRepository.save(userToUpdate);
 			StatusUtil.setUserStatus(messageRepository, updatedUser);
 			updatedUser.eraseCredentials();
-			return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
+			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
 	}
 
@@ -142,21 +160,25 @@ public class UserController {
 	 */
 	@RequestMapping(value = Url.USER_STATUS_BY_USERNAME, method = RequestMethod.PUT)
 	public ResponseEntity<?> updateUserStatus(@PathVariable String username, @RequestBody Status status) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+
 		if (userRepository.existsByUsername(username)) {
 			User userToUpdate = userRepository.findByUsername(username);
-			
+
 			if (status.isHardcoded()) {
-				userToUpdate.setStatus(status);				
-			} else {				
+				userToUpdate.setStatus(status);
+			} else {
 				userToUpdate.setStatus(null);
 			}
 
 			User updatedUser = userRepository.save(userToUpdate);
 			StatusUtil.setUserStatus(messageRepository, updatedUser);
 			updatedUser.eraseCredentials();
-			return new ResponseEntity<User>(updatedUser, HttpStatus.OK);
+			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
 		} else {
-			return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
 	}
 
