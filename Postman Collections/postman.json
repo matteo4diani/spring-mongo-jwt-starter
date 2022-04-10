@@ -228,7 +228,7 @@
       "response": []
     },
     {
-      "name": "Update User authorities (ADMIN)",
+      "name": "Update user authorities (ADMIN)",
       "event": [
         {
           "listen": "test",
