@@ -246,7 +246,7 @@
       "response": []
     },
     {
-      "name": "Respond to message (ADMIN) Copy",
+      "name": "Update User authorities (ADMIN)",
       "event": [
         {
           "listen": "test",
