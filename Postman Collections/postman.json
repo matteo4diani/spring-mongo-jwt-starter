@@ -252,7 +252,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"approved\": true,\r\n    \"responseNote\": \"Buon divertimento!\"\r\n}",
+          "raw": "[\"USER\"]",
           "options": {
             "raw": {
               "language": "json"
