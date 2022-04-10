@@ -6,28 +6,6 @@
   },
   "item": [
     {
-      "name": "Startup",
-      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"companyName\": \"SashaCorp\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/startup"
-      },
-      "response": []
-    },
-    {
       "name": "Startup Copy",
       "id": "33545819-0c68-4207-a3d7-48b0f4f3f7b6",
       "protocolProfileBehavior": {
@@ -318,6 +296,28 @@
           }
         },
         "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Startup",
+      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"companyName\": \"SashaCorp\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/startup"
       },
       "response": []
     }
