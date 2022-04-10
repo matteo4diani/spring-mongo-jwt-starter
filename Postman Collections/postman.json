@@ -305,13 +305,13 @@
         {
           "listen": "test",
           "script": {
+            "id": "1ff4b67e-4381-4bd4-9ac8-860e9aef461a",
             "exec": [
               "if (pm.response.code === 200) {\r",
               "    pm.environment.set('messageId', '');\r",
               "}"
             ],
-            "type": "text/javascript",
-            "id": "1ff4b67e-4381-4bd4-9ac8-860e9aef461a"
+            "type": "text/javascript"
           }
         }
       ],
@@ -331,7 +331,7 @@
             }
           }
         },
-        "url": "{{url}}/messages/id/{{messageId}}"
+        "url": "{{url}}/users/{{userUsername}}"
       },
       "response": []
     },
