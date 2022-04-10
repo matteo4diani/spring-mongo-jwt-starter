@@ -264,6 +264,42 @@
       "response": []
     },
     {
+      "name": "Update User authorities (ADMIN) Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', pm.response.json().id);\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "b3d53f27-88ca-46b9-b74a-96575132db80"
+          }
+        }
+      ],
+      "id": "5d23786c-555a-44ae-9af6-e132b0106de6",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"approved\": true,\r\n    \"responseNote\": \"Buon divertimento!\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
       "name": "Delete message (ADMIN)",
       "event": [
         {
@@ -318,42 +354,6 @@
           }
         },
         "url": "{{url}}/startup"
-      },
-      "response": []
-    },
-    {
-      "name": "Update User authorities (ADMIN) Copy",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "if (pm.response.code === 200) {\r",
-              "    pm.environment.set('messageId', pm.response.json().id);\r",
-              "}"
-            ],
-            "type": "text/javascript",
-            "id": "b3d53f27-88ca-46b9-b74a-96575132db80"
-          }
-        }
-      ],
-      "id": "5d23786c-555a-44ae-9af6-e132b0106de6",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "PUT",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"approved\": true,\r\n    \"responseNote\": \"Buon divertimento!\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/messages/id/{{messageId}}"
       },
       "response": []
     }
