@@ -16,14 +16,14 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
+          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"companyName\": \"SashaCorp\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
             }
           }
         },
-        "url": "{{url}}/register"
+        "url": "{{url}}/startup"
       },
       "response": []
     },
