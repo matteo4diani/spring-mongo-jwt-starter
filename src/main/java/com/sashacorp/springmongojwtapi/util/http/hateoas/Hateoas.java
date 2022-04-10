@@ -1,9 +1,9 @@
-package com.sashacorp.springmongojwtapi.models.http.hateoas;
+package com.sashacorp.springmongojwtapi.util.http.hateoas;
 
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.sashacorp.springmongojwtapi.models.http.hateoas.Rel.MimeUtil;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Rel.MimeUtil;
 
 public interface Hateoas {
 

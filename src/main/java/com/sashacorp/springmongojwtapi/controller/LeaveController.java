@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Leave;
 import com.sashacorp.springmongojwtapi.repository.LeaveRepository;
-import com.sashacorp.springmongojwtapi.util.HttpUtil;
+import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
 
 /**
  * API endpoints to manage event (leaves) types

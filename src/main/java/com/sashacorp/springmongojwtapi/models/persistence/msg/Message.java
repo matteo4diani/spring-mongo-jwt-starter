@@ -9,10 +9,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.controller.MeController;
 import com.sashacorp.springmongojwtapi.controller.MessageController;
-import com.sashacorp.springmongojwtapi.models.http.hateoas.Hateoas;
-import com.sashacorp.springmongojwtapi.models.http.hateoas.Links;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
 
 /**
  * Represents a request for a generic leave. The message begins in

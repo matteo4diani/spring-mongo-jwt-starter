@@ -27,8 +27,8 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.security.UserDetailsServiceImpl;
-import com.sashacorp.springmongojwtapi.util.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.JwtUtil;
+import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
 
 /**
  * API endpoints for authentication and ('ADMIN' only) registration

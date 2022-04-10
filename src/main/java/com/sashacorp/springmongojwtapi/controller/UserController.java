@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.hateoas.Url;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
@@ -26,9 +25,10 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
-import com.sashacorp.springmongojwtapi.util.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
+import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
 
 /**
  * Admin API endpoints for user management

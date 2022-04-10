@@ -55,7 +55,7 @@ public class StatusUtil {
 
 			if (useRepository) {
 				ongoingActivities = messageRepository
-						.findOngoingByReqUsername(
+						.findOngoingByUsername(
 								user.getUsername(), TimeUtil.now());
 			} else {
 				ongoingActivities = messagesByUser.get(user.getUsername());
