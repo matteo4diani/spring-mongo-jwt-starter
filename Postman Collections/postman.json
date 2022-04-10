@@ -300,7 +300,7 @@
       "response": []
     },
     {
-      "name": "Startup",
+      "name": "Reset",
       "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
