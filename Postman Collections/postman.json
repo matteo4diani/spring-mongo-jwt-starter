@@ -320,6 +320,42 @@
         "url": "{{url}}/reset"
       },
       "response": []
+    },
+    {
+      "name": "Delete message (ADMIN) Copy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', '');\r",
+              "}"
+            ],
+            "type": "text/javascript",
+            "id": "1ff4b67e-4381-4bd4-9ac8-860e9aef461a"
+          }
+        }
+      ],
+      "id": "525048ec-6dc2-45e4-b166-8f56107be930",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
     }
   ],
   "auth": {
