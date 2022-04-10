@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import com.sashacorp.springmongojwtapi.security.filters.JwtRequestFilter;
+import com.sashacorp.springmongojwtapi.security.filter.JwtRequestFilter;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

@@ -4,8 +4,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
+import com.sashacorp.springmongojwtapi.security.Authority;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * Utility class holding together: 
@@ -95,19 +96,19 @@ public class Rel {
 	 *
 	 */
 	public static class MimeUtil {
-		private static Map<String, MimeTypes> mimeTypesMap;
+		private static Map<String, MimeType> mimeTypesMap;
 		
 		static {
 			mimeTypesMap = new ConcurrentHashMap<>();
-			mimeTypesMap.put(Url.ME, MimeTypes.USER);
-			mimeTypesMap.put(Url.MY_MESSAGES, MimeTypes.MESSAGE);
-			mimeTypesMap.put(Url.MY_MESSAGE_BY_MESSAGE_ID, MimeTypes.MESSAGE);
-			mimeTypesMap.put(Url.MESSAGE_BY_MESSAGE_ID, MimeTypes.MESSAGE);
-			mimeTypesMap.put(Url.USER_BY_USERNAME, MimeTypes.USER);
-			mimeTypesMap.put(Url.RESPONDER_BY_USERNAME, MimeTypes.USER);
-			mimeTypesMap.put(Url.MESSAGES_BY_USERNAME, MimeTypes.MESSAGE);
-			mimeTypesMap.put(Url.USER_AUTHORITIES_BY_USERNAME, MimeTypes.AUTHORITY);
-			mimeTypesMap.put(Url.USER_STATUS_BY_USERNAME, MimeTypes.STATUS);
+			mimeTypesMap.put(Url.ME, MimeType.USER);
+			mimeTypesMap.put(Url.MY_MESSAGES, MimeType.MESSAGE);
+			mimeTypesMap.put(Url.MY_MESSAGE_BY_MESSAGE_ID, MimeType.MESSAGE);
+			mimeTypesMap.put(Url.MESSAGE_BY_MESSAGE_ID, MimeType.MESSAGE);
+			mimeTypesMap.put(Url.USER_BY_USERNAME, MimeType.USER);
+			mimeTypesMap.put(Url.RESPONDER_BY_USERNAME, MimeType.USER);
+			mimeTypesMap.put(Url.MESSAGES_BY_USERNAME, MimeType.MESSAGE);
+			mimeTypesMap.put(Url.USER_AUTHORITIES_BY_USERNAME, MimeType.AUTHORITY);
+			mimeTypesMap.put(Url.USER_STATUS_BY_USERNAME, MimeType.STATUS);
 		}
 		
 		/**
@@ -117,19 +118,19 @@ public class Rel {
 		 * @return
 		 */
 		public static String mime(String uri) {
-			return mimeTypesMap.containsKey(uri) ? mimeTypesMap.get(uri).mime() : MimeTypes.JSON.mime();
+			return mimeTypesMap.containsKey(uri) ? mimeTypesMap.get(uri).mime() : MimeType.JSON.mime();
 		}
 	}
 	
 	/**
 	 * Helper static class defined in {@link Rel}.<br/>
-	 * Associates a Map<{@link Slug}, {@link Url}> (both as strings) to the requested {@link MimeTypes} 
+	 * Associates a Map<{@link Slug}, {@link Url}> (both as strings) to the requested {@link MimeType} 
 	 * and the {@link Authority} of the {@link User} making the request.
 	 * @author matteo
 	 *
 	 */
 	public static class ResourceUtil {
-		private static Map<MimeTypes, Map<Authority, Map<String, String>>> resourceMap;
+		private static Map<MimeType, Map<Authority, Map<String, String>>> resourceMap;
 		
 		static {
 			resourceMap = new ConcurrentHashMap<>();
@@ -137,16 +138,16 @@ public class Rel {
 			Map<Authority, Map<String, String>> userTypeMap = new ConcurrentHashMap<>();
 			userTypeMap.put(Authority.USER, Rel.userResources);
 			userTypeMap.put(Authority.HR, Rel.adminUserResources);
-			resourceMap.put(MimeTypes.USER, userTypeMap);
+			resourceMap.put(MimeType.USER, userTypeMap);
 			
 			Map<Authority, Map<String, String>> messageTypeMap = new ConcurrentHashMap<>();
 			messageTypeMap.put(Authority.USER, Rel.messageResources);
 			messageTypeMap.put(Authority.HR, Rel.adminMessageResources);
-			resourceMap.put(MimeTypes.MESSAGE, messageTypeMap);
+			resourceMap.put(MimeType.MESSAGE, messageTypeMap);
 			
 		}
 		
-		public static Map<String, String> get(MimeTypes type, Authority authority) {
+		public static Map<String, String> get(MimeType type, Authority authority) {
 			return resourceMap.get(type).get(authority);
 		}
 		

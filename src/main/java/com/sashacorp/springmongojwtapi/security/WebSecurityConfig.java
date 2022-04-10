@@ -14,7 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.sashacorp.springmongojwtapi.appconfig.AppConfigurator;
-import com.sashacorp.springmongojwtapi.security.filters.JwtRequestFilter;
+import com.sashacorp.springmongojwtapi.security.filter.JwtRequestFilter;
 
 /**
  * Global security configuration class.
@@ -57,7 +57,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll()
 				.antMatchers("/startup").access("@appConfigurator.isAppUninitialized()")
 				.antMatchers("/me", "/me/*").hasAnyAuthority("USER", "ADMIN")
-				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
+				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/events", "/events/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
 				.antMatchers("/admin", "/admin/*").hasAnyAuthority("MANAGER", "ADMIN")
 				.antMatchers("/reset").hasAuthority("ADMIN")
 				.anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()

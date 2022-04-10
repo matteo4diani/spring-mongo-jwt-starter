@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.security.filters;
+package com.sashacorp.springmongojwtapi.security.filter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

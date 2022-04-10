@@ -5,13 +5,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * This class is to be used by the user agent to understand and internationalize
- * the 'leave' property of {@link Message}
+ * the 'eventType' property of {@link Message}
  * 
  * @author matteo
  *
  */
-@Document(collection = "leaves")
-public class Leave {
+@Document(collection = "eventTypes")
+public class EventType {
 
 	@Id
 	private String id;
@@ -20,9 +20,16 @@ public class Leave {
 
 	private String description;
 
-	public Leave() {
+	public EventType() {
 		super();
 	}
+
+	public EventType(String name, String description) {
+		super();
+		this.name = name;
+		this.description = description;
+	}
+
 
 	public String getId() {
 		return id;
@@ -36,8 +43,8 @@ public class Leave {
 		return name;
 	}
 
-	public void setName(String leave) {
-		this.name = leave;
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getDescription() {

@@ -18,17 +18,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
+import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.security.AuthorityUtil;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * Admin API endpoints for user management
@@ -182,5 +182,30 @@ public class UserController {
 		return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
 
 	}
-
+	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUser(@PathVariable String username) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		
+		if (!userRepository.existsByUsername(username)) {
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
+		}
+		
+		User userToDelete = userRepository.findByUsername(username);
+		
+		if(AuthorityUtil.canEditAuthoritiesOf(requester.getMaxAuthority(), userToDelete.getMaxAuthority())) {			
+			userRepository.delete(userToDelete);
+			List<Message> messages = messageRepository.findByUsername(username);
+			
+			if (messages != null) {			
+				messages.forEach((message) -> {
+					messageRepository.delete(message);
+				});
+			}
+			return HttpUtil.getHttpStatusResponse(HttpStatus.OK);
+		} else {			
+			return HttpUtil.getHttpStatusResponse(HttpStatus.FORBIDDEN);
+		}
+	}
 }

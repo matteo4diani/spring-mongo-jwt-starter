@@ -1,9 +1,11 @@
-package com.sashacorp.springmongojwtapi.models.persistence.user;
+package com.sashacorp.springmongojwtapi.security;
+
+import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 
 /**
  * Represents a {@link User}'s authority. Order of definition implies hierarchy
- * (e.g. ADMIN > MANAGER > HR > USER > GUEST).
- * Authority instances expose useful methods ({@code canGrantAuthority(Authority)} and {@code canEditAuthoritiesOf(Authority)})
+ * (e.g. ADMIN > MANAGER > HR > USER).
+ * {@link AuthorityUtil} exposes useful methods ({@code canGrantAuthority(Authority)} and {@code canEditAuthoritiesOf(Authority)})
  * to compare authorities and evaluate permissions
  * 
  * @author matteo
@@ -19,7 +21,7 @@ public enum Authority {
 	
 	/**
 	 * 
-	 * @return the {@link Authority}'s ordinal. The lower the number, the higher the authority level (e.g. 0 is admin, 1 is manager, 2 is hr, etc.)
+	 * @return the {@link Authority}'s  enum ordinal. The lower the number, the higher the authority level (e.g. 0 is admin, 1 is manager, 2 is hr, etc.)
 	 */
 	public int getAuthorityLevel() {
 		return this.ordinal();
@@ -44,7 +46,7 @@ public enum Authority {
 		case "USER":
 			return Authority.USER;
 		default:
-			return Authority.GUEST;
+			return null;
 		}
 	}
 

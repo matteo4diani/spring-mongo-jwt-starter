@@ -1,4 +1,8 @@
-package com.sashacorp.springmongojwtapi.util.http.hateoas;
+package com.sashacorp.springmongojwtapi.util.http;
+
+import com.sashacorp.springmongojwtapi.util.http.hateoas.HateoasUtil;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Rel;
+
 /**
  * The only source for entity URL mappings, keeping the URLs made of {@code public static final String}s (i.e. constant expressions in Java)
  * allows URLs to be parametrized and shared across resources.
@@ -11,6 +15,12 @@ public class Url {
 	/*
 	 * Building blocks
 	 */
+	
+	/*
+	 * application configuration controls
+	 */
+	public static final String STARTUP = "/startup";
+	public static final String RESET = "/reset";
 	
 	/*
 	 * entities

@@ -8,11 +8,11 @@ import org.springframework.http.ResponseEntity;
 
 import com.sashacorp.springmongojwtapi.models.http.PlainTextResponse;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationResponse;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
+import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.HateoasUtil;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
 
 public class HttpUtil {
 	public static ResponseEntity<PlainTextResponse> getPlainTextResponse(String message, HttpStatus httpStatus) {

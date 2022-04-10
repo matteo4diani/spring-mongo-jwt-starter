@@ -9,13 +9,13 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.controller.MeController;
 import com.sashacorp.springmongojwtapi.controller.MessageController;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
 
 /**
- * Represents a request for a generic leave. The message begins in
+ * Represents a request for a generic eventType. The message begins in
  * {@link MeController} with 'pending'=true and is approved or rejected by an
  * ADMIN, MANAGER or HR via {@link MessageController}.
  * 
@@ -47,12 +47,12 @@ public class Message implements Hateoas, Ownable {
 	private User requester;
 	private User responder;
 
-	private String leave;
+	private String eventType;
 
 	private Links _resources = null;
 
-	public void setLeave(String leave) {
-		this.leave = leave;
+	public void setEventType(String eventType) {
+		this.eventType = eventType;
 	}
 
 	public Message() {
@@ -135,8 +135,8 @@ public class Message implements Hateoas, Ownable {
 		this.responder = responder;
 	}
 
-	public String getLeave() {
-		return leave;
+	public String getEventType() {
+		return eventType;
 	}
 
 	public Boolean isPending() {

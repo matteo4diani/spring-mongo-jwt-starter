@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.user.DefaultStatus;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
@@ -72,17 +73,17 @@ public class StatusUtil {
 			/**
 			 * user has no ongoing activities and no hardcoded status
 			 */
-			user.setStatus(new Status("ON", false));
+			user.setStatus(new Status(DefaultStatus.ON.type(), false));
 		} else if (ongoingActivities.size() == 1) {
 			/**
 			 * user has an ongoing activity
 			 */
-			user.setStatus(new Status(ongoingActivities.get(0).getLeave(), false));
+			user.setStatus(new Status(ongoingActivities.get(0).getEventType(), false));
 		} else {
 			/**
 			 * user has more than one ongoing activity. Their status is inconsistent.
 			 */
-			user.setStatus(new Status(Status.INCONSISTENT, false));
+			user.setStatus(new Status(DefaultStatus.INCONSISTENT.type(), false));
 		}
 	}
 

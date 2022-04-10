@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.sashacorp.springmongojwtapi.repository.LeaveRepository;
+import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
 import com.sashacorp.springmongojwtapi.service.sse.AdminNotificationService;
@@ -25,7 +25,7 @@ public class SpringSecurityJwtApplicationTests {
 	@Autowired
 	MessageRepository messageRepository;
 	@Autowired
-	LeaveRepository leaveRepository;
+	EventTypeRepository eventTypeRepository;
 	
 	
 	@Test

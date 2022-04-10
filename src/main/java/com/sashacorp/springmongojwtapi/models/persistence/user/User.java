@@ -11,8 +11,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
 
 /**
  * Entity class representing users. <br>
