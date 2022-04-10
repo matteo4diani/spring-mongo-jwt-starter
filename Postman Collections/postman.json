@@ -337,6 +337,20 @@
     },
     {
       "name": "Reset (first call) (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d1540228-c982-40a9-a508-6647a5588a13",
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('resetKey', pm.response.json().message);\r",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
       "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
