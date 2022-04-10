@@ -118,7 +118,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
+          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
           "options": {
             "raw": {
               "language": "json"
