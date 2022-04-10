@@ -161,13 +161,13 @@
         {
           "listen": "test",
           "script": {
+            "id": "921e8944-75cd-49f8-be90-f0b6bdf696d6",
             "exec": [
               "if (pm.response.code === 201) {\r",
               "    pm.environment.set('messageId', pm.response.json().id);\r",
               "}"
             ],
-            "type": "text/javascript",
-            "id": "921e8944-75cd-49f8-be90-f0b6bdf696d6"
+            "type": "text/javascript"
           }
         }
       ],
@@ -180,7 +180,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"start\": \"2022-04-05T00:00:00\",\r\n    \"end\": \"2022-04-18T23:59:00\",\r\n    \"requestNote\": \"Vado di nuovo in vacanza!\",\r\n    \"leave\": \"LONG\"\r\n}",
+          "raw": "{\r\n    \"start\": \"2022-04-05T00:00:00\",\r\n    \"end\": \"2022-04-18T23:59:00\",\r\n    \"requestNote\": \"Vado di nuovo in vacanza!\",\r\n    \"eventType\": \"LONG\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
