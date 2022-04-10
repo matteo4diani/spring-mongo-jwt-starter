@@ -7,21 +7,25 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Ownable;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
+import com.sashacorp.springmongojwtapi.security.Authority;
 
+/**
+ * Utility class to centralize HATEOAS resource generation
+ * @author matteo
+ *
+ */
 public class HateoasUtil {
 	
 	public static <T extends Ownable & Hateoas> void setOwnedResources(T obj, User user) {
-		boolean objIsFromUser = obj.getOwner().getUsername().equals(user.getUsername());
-		MimeTypes type = getMimeType(obj);
+		boolean objIsOwnedByUser = obj.getOwner().getUsername().equals(user.getUsername());
+		MimeType type = getMimeType(obj);
 		
 		if (type != null) {			
 			Map<String, String> adminResources = Rel.ResourceUtil.get(type, Authority.HR);
 			Map<String, String> userResources = Rel.ResourceUtil.get(type, Authority.USER);
 			
-			if (user.hasEnoughAuthority(Authority.HR) && objIsFromUser) {
+			if (user.hasEnoughAuthority(Authority.HR) && objIsOwnedByUser) {
 				Map<String, String> resources = Stream.of(adminResources, userResources)
 						.flatMap(map -> map.entrySet().stream())
 						.sorted(Comparator.comparing(Map.Entry::getKey))
@@ -29,7 +33,7 @@ public class HateoasUtil {
 				obj.setResources(resources);
 			} else if (user.hasEnoughAuthority(Authority.HR)) {
 				obj.setResources(adminResources);
-			} else if (objIsFromUser) {
+			} else if (objIsOwnedByUser) {
 				obj.setResources(userResources);			
 			}
 		}
@@ -44,11 +48,11 @@ public class HateoasUtil {
 		return obj;
 	}
 	
-	public static <T> MimeTypes getMimeType(T obj) {
+	public static <T> MimeType getMimeType(T obj) {
 		if (obj instanceof Message) {
-			return MimeTypes.MESSAGE;
+			return MimeType.MESSAGE;
 		} else if (obj instanceof User) {
-			return MimeTypes.USER;
+			return MimeType.USER;
 		} else {
 			return null;
 		}

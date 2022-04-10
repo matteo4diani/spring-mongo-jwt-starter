@@ -6,6 +6,28 @@
   },
   "item": [
     {
+      "name": "Startup",
+      "id": "33545819-0c68-4207-a3d7-48b0f4f3f7b6",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"companyName\": \"SashaCorp\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/startup"
+      },
+      "response": []
+    },
+    {
       "name": "Login user (ADMIN)",
       "event": [
         {
@@ -35,46 +57,6 @@
         "body": {
           "mode": "raw",
           "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/authenticate"
-      },
-      "response": []
-    },
-    {
-      "name": "Login user (GUEST)",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "exec": [
-              "if (pm.response.code === 200) {\r",
-              "    pm.environment.set('jwt', pm.response.json().jwt);\r",
-              "}\r",
-              ""
-            ],
-            "type": "text/javascript",
-            "id": "8b84d8ab-45a4-4a44-be19-2c0aafd37038"
-          }
-        }
-      ],
-      "id": "9e5c3a4d-66a8-4981-832b-e1cc42087d46",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "auth": {
-          "type": "noauth"
-        },
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -136,7 +118,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"q.colui@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
+          "raw": "{\r\n    \"username\": \"q.chiunque@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"authorities\": [\"USER\"]\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -179,13 +161,13 @@
         {
           "listen": "test",
           "script": {
+            "id": "921e8944-75cd-49f8-be90-f0b6bdf696d6",
             "exec": [
               "if (pm.response.code === 201) {\r",
               "    pm.environment.set('messageId', pm.response.json().id);\r",
               "}"
             ],
-            "type": "text/javascript",
-            "id": "921e8944-75cd-49f8-be90-f0b6bdf696d6"
+            "type": "text/javascript"
           }
         }
       ],
@@ -198,7 +180,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"start\": \"2022-04-05T00:00:00\",\r\n    \"end\": \"2022-04-18T23:59:00\",\r\n    \"requestNote\": \"Vado di nuovo in vacanza!\",\r\n    \"leave\": \"LONG\"\r\n}",
+          "raw": "{\r\n    \"start\": \"2022-04-05T00:00:00\",\r\n    \"end\": \"2022-04-18T23:59:00\",\r\n    \"requestNote\": \"Vado di nuovo in vacanza!\",\r\n    \"eventType\": \"LONG\"\r\n}",
           "options": {
             "raw": {
               "language": "json"
@@ -246,6 +228,42 @@
       "response": []
     },
     {
+      "name": "Update user authorities (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "ed32370e-6b40-4933-b18c-5357f5248477",
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', pm.response.json().id);\r",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "id": "b32a77fc-680a-469c-8326-30875ec888d3",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "[\"USER\"]",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/users/authorities/{{userUsername}}"
+      },
+      "response": []
+    },
+    {
       "name": "Delete message (ADMIN)",
       "event": [
         {
@@ -278,6 +296,115 @@
           }
         },
         "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Delete user (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "1ff4b67e-4381-4bd4-9ac8-860e9aef461a",
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('messageId', '');\r",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "id": "525048ec-6dc2-45e4-b166-8f56107be930",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/users/{{userUsername}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Reset (first call) (ADMIN)",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "d1540228-c982-40a9-a508-6647a5588a13",
+            "exec": [
+              "if (pm.response.code === 200) {\r",
+              "    pm.environment.set('resetKey', pm.response.json().message);\r",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/reset"
+      },
+      "response": []
+    },
+    {
+      "name": "Reset (definitive) (ADMIN)",
+      "id": "6cd5a9d5-8dd3-41f6-b6d4-0966e8bbbe8a",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{url}}/reset?resetKey={{resetKey}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "reset"
+          ],
+          "query": [
+            {
+              "key": "resetKey",
+              "value": "{{resetKey}}",
+              "type": "text"
+            }
+          ]
+        }
       },
       "response": []
     }

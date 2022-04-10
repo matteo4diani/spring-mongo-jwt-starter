@@ -1,5 +1,10 @@
 package com.sashacorp.springmongojwtapi.util.http.hateoas;
 
+/**
+ * Entity class representing a link to an entity's resource
+ * @author matteo
+ *
+ */
 public class Link {
 	
 	private String href;

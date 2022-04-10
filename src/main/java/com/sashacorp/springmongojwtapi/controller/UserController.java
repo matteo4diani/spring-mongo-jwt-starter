@@ -1,6 +1,5 @@
 package com.sashacorp.springmongojwtapi.controller;
 
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -19,16 +18,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
+import com.sashacorp.springmongojwtapi.security.Authority;
+import com.sashacorp.springmongojwtapi.security.AuthorityUtil;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * Admin API endpoints for user management
@@ -78,14 +78,14 @@ public class UserController {
 				.getPrincipal();
 		User requester = userRepository.findByUsername(userDetails.getUsername());
 
-		if (userRepository.existsByUsername(username)) {
-			User user = userRepository.findByUsername(username);
-			StatusUtil.setUserStatus(messageRepository, user);
-			user.eraseCredentials();
-			return HttpUtil.getResponse(user, HttpStatus.OK, requester);
-		} else {
+		if (!userRepository.existsByUsername(username)) {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
+		User user = userRepository.findByUsername(username);
+		StatusUtil.setUserStatus(messageRepository, user);
+		user.eraseCredentials();
+		return HttpUtil.getResponse(user, HttpStatus.OK, requester);
+		
 	}
 
 	/**
@@ -102,24 +102,23 @@ public class UserController {
 				.getPrincipal();
 		User requester = userRepository.findByUsername(userDetails.getUsername());
 
-		if (userRepository.existsByUsername(username)) {
-			User userToUpdate = userRepository.findByUsername(username);
-			userToUpdate.mergeWith(userFromRequest);
-			User updatedUser = userRepository.save(userToUpdate);
-			StatusUtil.setUserStatus(messageRepository, updatedUser);
-			updatedUser.eraseCredentials();
-			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
-		} else {
+		if (!userRepository.existsByUsername(username)) {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
+		User userToUpdate = userRepository.findByUsername(username);
+		userToUpdate.mergeWith(userFromRequest);
+		User updatedUser = userRepository.save(userToUpdate);
+		StatusUtil.setUserStatus(messageRepository, updatedUser);
+		updatedUser.eraseCredentials();
+		return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
+		
 	}
 
 	/**
-	 * Set the user's authorities. See {@link AuthorityOld}.
+	 * Set the user's authorities. See {@link Authority}.
 	 * 
 	 * @param username
-	 * @param authoritiesFromRequest - provide an array such as
-	 *                               [{"authority":"ADMIN"},{"authority":"USER"}] in
+	 * @param authoritiesFromRequest - provide an array such as ["ADMIN", "USER"] in
 	 *                               JSON
 	 * @return
 	 */
@@ -129,24 +128,26 @@ public class UserController {
 		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
 				.getPrincipal();
 		User requester = userRepository.findByUsername(userDetails.getUsername());
+		Authority requesterAuthority = requester.getMaxAuthority();
 
-		if (userRepository.existsByUsername(username)) {
-			User userToUpdate = userRepository.findByUsername(username);
-			Set<Authority> authorities = new HashSet<>();
-
-			authoritiesFromRequest.forEach(authority -> {
-				Authority internalAuthority = Authority.getAuthority(authority);
-				authorities.add(internalAuthority);
-			});
-
-			userToUpdate.setAuthorities(authorities);
-			User updatedUser = userRepository.save(userToUpdate);
-			StatusUtil.setUserStatus(messageRepository, updatedUser);
-			updatedUser.eraseCredentials();
-			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
-		} else {
+		if (!userRepository.existsByUsername(username)) {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
+		
+		User userToUpdate = userRepository.findByUsername(username);
+
+		if (!AuthorityUtil.canEditAuthoritiesOf(requesterAuthority, userToUpdate.getMaxAuthority())) {
+			return HttpUtil.getHttpStatusResponse(HttpStatus.FORBIDDEN);
+		}
+		
+		Set<Authority> authorities = AuthorityUtil.buildAuthorities(requesterAuthority, authoritiesFromRequest);
+
+		userToUpdate.setAuthorities(authorities);
+		User updatedUser = userRepository.save(userToUpdate);
+		StatusUtil.setUserStatus(messageRepository, updatedUser);
+		updatedUser.eraseCredentials();
+		return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
+
 	}
 
 	/**
@@ -164,22 +165,52 @@ public class UserController {
 				.getPrincipal();
 		User requester = userRepository.findByUsername(userDetails.getUsername());
 
-		if (userRepository.existsByUsername(username)) {
-			User userToUpdate = userRepository.findByUsername(username);
-
-			if (status.isHardcoded()) {
-				userToUpdate.setStatus(status);
-			} else {
-				userToUpdate.setStatus(null);
-			}
-
-			User updatedUser = userRepository.save(userToUpdate);
-			StatusUtil.setUserStatus(messageRepository, updatedUser);
-			updatedUser.eraseCredentials();
-			return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
-		} else {
+		if (!userRepository.existsByUsername(username)) {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}
-	}
+		User userToUpdate = userRepository.findByUsername(username);
 
+		if (status.isHardcoded()) {
+			userToUpdate.setStatus(status);
+		} else {
+			userToUpdate.setStatus(null);
+		}
+
+		User updatedUser = userRepository.save(userToUpdate);
+		StatusUtil.setUserStatus(messageRepository, updatedUser);
+		updatedUser.eraseCredentials();
+		return HttpUtil.getResponse(updatedUser, HttpStatus.OK, requester);
+
+	}
+	/**
+	 * Delete user and all its data (messages)
+	 * @param username
+	 * @return
+	 */
+	@RequestMapping(value = Url.USER_BY_USERNAME, method = RequestMethod.DELETE)
+	public ResponseEntity<?> deleteUser(@PathVariable String username) {
+		UserDetails userDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		User requester = userRepository.findByUsername(userDetails.getUsername());
+		
+		if (!userRepository.existsByUsername(username)) {
+			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
+		}
+		
+		User userToDelete = userRepository.findByUsername(username);
+		
+		if(AuthorityUtil.canEditAuthoritiesOf(requester.getMaxAuthority(), userToDelete.getMaxAuthority())) {			
+			userRepository.delete(userToDelete);
+			List<Message> messages = messageRepository.findByUsername(username);
+			
+			if (messages != null) {			
+				messages.forEach((message) -> {
+					messageRepository.delete(message);
+				});
+			}
+			return HttpUtil.getHttpStatusResponse(HttpStatus.OK);
+		} else {			
+			return HttpUtil.getHttpStatusResponse(HttpStatus.FORBIDDEN);
+		}
+	}
 }

@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.Errors;
-import com.sashacorp.springmongojwtapi.models.http.Notifications;
+import com.sashacorp.springmongojwtapi.models.http.Error;
+import com.sashacorp.springmongojwtapi.models.http.Notification;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
@@ -27,8 +27,8 @@ import com.sashacorp.springmongojwtapi.service.sse.AdminNotificationService;
 import com.sashacorp.springmongojwtapi.util.StatusUtil;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Par;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
+import com.sashacorp.springmongojwtapi.util.http.Par;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * User API endpoints for request management
@@ -81,7 +81,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
@@ -114,7 +114,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
@@ -146,7 +146,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
@@ -171,7 +171,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		String username = userDetails.getUsername();
@@ -201,7 +201,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);
@@ -221,10 +221,10 @@ public class MeController {
 	}
 
 	/**
-	 * Post a new request for a leave. Admins are notified via Server Sent Events:
+	 * Post a new request for a leave/event. Admins are notified via Server Sent Events:
 	 * see {@link AdminNotificationService}.
 	 * 
-	 * @param message - provide 'start', 'end', 'requestNote' and 'leave' in JSON
+	 * @param message - provide 'start', 'end', 'requestNote' and 'eventType' in JSON
 	 * @return
 	 */
 	@RequestMapping(value = Url.MY_MESSAGES, method = RequestMethod.POST)
@@ -234,7 +234,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		User requester = userRepository.findByUsername(userDetails.getUsername());
@@ -258,7 +258,7 @@ public class MeController {
 		message.setRequester(requester);
 		message.setSeen(true);
 		Message newMessage = messageRepository.save(message);
-		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.POST_USER.text(),
+		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notification.POST_USER.text(),
 				requester.getId(), requester.getUsername(), newMessage.getId(), newMessage);
 		adminNotificationService.getEventPublisher().publishEvent(adminNotificationEvent);
 		return HttpUtil.getResponse(newMessage, HttpStatus.CREATED, requester);
@@ -277,7 +277,7 @@ public class MeController {
 				.getPrincipal();
 
 		if (userDetails == null || !userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		Message message = messageRepository.findById(messageId).orElse(null);

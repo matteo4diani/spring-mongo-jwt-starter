@@ -3,7 +3,7 @@ package com.sashacorp.springmongojwtapi.models.http.auth;
 import java.io.Serializable;
 import java.util.Set;
 
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
+import com.sashacorp.springmongojwtapi.security.Authority;
 
 
 /**

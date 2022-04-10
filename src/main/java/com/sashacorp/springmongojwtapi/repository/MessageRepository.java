@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
@@ -22,6 +23,7 @@ import com.sashacorp.springmongojwtapi.util.TimeUtil;
  * @author Matteo Fordiani
  *
  */
+@Repository
 public interface MessageRepository extends MongoRepository<Message, String> {
 
 	/**

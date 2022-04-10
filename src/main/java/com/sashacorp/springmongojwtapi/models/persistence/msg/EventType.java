@@ -4,25 +4,31 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * This class is to be used by the user agent to understand and internationalize
- * the 'leave' property of {@link Message}
+ * Entity class offering a detailed representation/mold for the 'eventType' property of {@link Message}
  * 
  * @author matteo
  *
  */
-@Document(collection = "leaves")
-public class Leave {
+@Document(collection = "eventTypes")
+public class EventType {
 
 	@Id
 	private String id;
 
-	private String name;
+	private String type;
 
 	private String description;
 
-	public Leave() {
+	public EventType() {
 		super();
 	}
+
+	public EventType(String type, String description) {
+		super();
+		this.type = type;
+		this.description = description;
+	}
+
 
 	public String getId() {
 		return id;
@@ -32,12 +38,12 @@ public class Leave {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getType() {
+		return type;
 	}
 
-	public void setName(String leave) {
-		this.name = leave;
+	public void setType(String type) {
+		this.type = type;
 	}
 
 	public String getDescription() {

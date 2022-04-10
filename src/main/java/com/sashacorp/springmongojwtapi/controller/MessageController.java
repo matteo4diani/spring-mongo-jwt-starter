@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.Errors;
-import com.sashacorp.springmongojwtapi.models.http.Notifications;
+import com.sashacorp.springmongojwtapi.models.http.Error;
+import com.sashacorp.springmongojwtapi.models.http.Notification;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.http.sse.UserNotificationSse;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
@@ -30,8 +30,8 @@ import com.sashacorp.springmongojwtapi.service.sse.AdminNotificationService;
 import com.sashacorp.springmongojwtapi.service.sse.UserNotificationService;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Par;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Url;
+import com.sashacorp.springmongojwtapi.util.http.Par;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * HR/Admin API endpoints for request management
@@ -350,11 +350,11 @@ public class MessageController {
 				.getPrincipal();
 
 		if (userDetails == null) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		if (!userRepository.existsByUsername(userDetails.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
+			return HttpUtil.getPlainTextResponse(Error.AUTH_USERNAME_NOT_FOUND.text(), HttpStatus.FORBIDDEN);
 		}
 
 		User responder = userRepository.findByUsername(userDetails.getUsername());
@@ -379,12 +379,12 @@ public class MessageController {
 		requestMsg.setSeen(false);
 		Message updatedMsg = messageRepository.save(requestMsg);
 
-		UserNotificationSse userNotificationEvent = new UserNotificationSse(Notifications.PUT_ADMIN.text(),
+		UserNotificationSse userNotificationEvent = new UserNotificationSse(Notification.PUT_ADMIN.text(),
 				requestMsg.getRequester().getId(), requestMsg.getId(), updatedMsg);
 
 		userNotificationService.getEventPublisher().publishEvent(userNotificationEvent);
 
-		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notifications.PUT_ADMIN.text(),
+		AdminNotificationSse adminNotificationEvent = new AdminNotificationSse(Notification.PUT_ADMIN.text(),
 				requestMsg.getRequester().getId(), requestMsg.getRequester().getUsername(), requestMsg.getId(),
 				updatedMsg);
 

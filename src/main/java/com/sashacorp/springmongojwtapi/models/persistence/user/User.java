@@ -11,8 +11,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
 
 /**
  * Entity class representing users. <br>
@@ -259,6 +261,10 @@ public class User implements Hateoas, Ownable {
 		this.site = userFromRequest.getSite() != null ? userFromRequest.getSite() : this.site;
 	}
 	
+	/**
+	 * Returns the highest authority held by the user
+	 * @return
+	 */
 	public Authority getMaxAuthority() {
 		if (authorities == null) return null;
 		return authorities
@@ -287,6 +293,12 @@ public class User implements Hateoas, Ownable {
 	public boolean hasAuthority(Authority authority) {
 		return authorities == null ? false : authorities.contains(authority);
 	}
+	
+	/**
+	 * Utility method to check if user has authority higher or equal than the authority parameter
+	 * @param authority
+	 * @return
+	 */
 	public boolean hasEnoughAuthority(Authority authority) {
 		return authorities == null ? false : getMaxAuthority().getAuthorityLevel() <= authority.getAuthorityLevel();
 	}

@@ -13,7 +13,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.sashacorp.springmongojwtapi.filters.JwtRequestFilter;
+import com.sashacorp.springmongojwtapi.appconfig.AppConfigurator;
+import com.sashacorp.springmongojwtapi.security.filter.JwtRequestFilter;
 
 /**
  * Global security configuration class.
@@ -26,20 +27,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService myUserDetailsService;
-
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
-
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
 	}
-
+	@Bean
+	public AppConfigurator appConfigurator() {
+		return new AppConfigurator();
+	}
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 	@Override
 	@Bean
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -53,9 +54,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/authenticate", "/register").permitAll()
-				.antMatchers("/me", "/me/*").hasAuthority("USER")
-				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/admin", "/admin/*").hasAuthority("ADMIN")
+		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll()
+				.antMatchers("/startup").access("@appConfigurator.isAppUninitialized()")
+				.antMatchers("/me", "/me/*", "/events").hasAnyAuthority("USER", "HR", "MANAGER", "ADMIN")
+				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/events/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
+				.antMatchers("/admin", "/admin/*").hasAnyAuthority("MANAGER", "ADMIN")
+				.antMatchers("/reset").hasAuthority("ADMIN")
 				.anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

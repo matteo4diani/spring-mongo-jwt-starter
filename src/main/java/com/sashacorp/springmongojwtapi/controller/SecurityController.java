@@ -1,6 +1,5 @@
 package com.sashacorp.springmongojwtapi.controller;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,15 +18,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.http.Errors;
+import com.sashacorp.springmongojwtapi.models.http.Error;
 import com.sashacorp.springmongojwtapi.models.http.auth.AuthenticationRequest;
 import com.sashacorp.springmongojwtapi.models.http.auth.SignupRequest;
-import com.sashacorp.springmongojwtapi.models.persistence.user.Authority;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
+import com.sashacorp.springmongojwtapi.security.Authority;
+import com.sashacorp.springmongojwtapi.security.AuthorityUtil;
+import com.sashacorp.springmongojwtapi.security.JwtUtil;
 import com.sashacorp.springmongojwtapi.security.UserDetailsImpl;
 import com.sashacorp.springmongojwtapi.security.UserDetailsServiceImpl;
-import com.sashacorp.springmongojwtapi.util.JwtUtil;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
 
 /**
@@ -66,7 +66,7 @@ public class SecurityController {
 			authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
 					authenticationRequest.getUsername(), authenticationRequest.getPassword()));
 		} catch (BadCredentialsException e) {
-			throw new Exception(Errors.AUTH_WRONG_CREDENTIALS.text(), e);
+			throw new Exception(Error.AUTH_WRONG_CREDENTIALS.text(), e);
 		}
 
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
@@ -85,49 +85,28 @@ public class SecurityController {
 	@PostMapping("/register")
 	public ResponseEntity<?> registerUser(@RequestBody SignupRequest signUpRequest) {
 		if (userRepository.existsByUsername(signUpRequest.getUsername())) {
-			return HttpUtil.getPlainTextResponse(Errors.REG_USERNAME_EXISTS.text(), HttpStatus.BAD_REQUEST);
+			return HttpUtil.getPlainTextResponse(Error.REG_USERNAME_EXISTS.text(), HttpStatus.BAD_REQUEST);
 		}
 
 		User user = new User(signUpRequest.getUsername(), encoder.encode(signUpRequest.getPassword()),
 				signUpRequest.getUsername());
 		User requester = null;
 		Authority requesterAuthority;
+		
+		UserDetails requesterDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
+				.getPrincipal();
+		requester = userRepository.findByUsername(requesterDetails.getUsername());
 
-		try {
-			UserDetails requesterDetails = (UserDetailsImpl) SecurityContextHolder.getContext().getAuthentication()
-					.getPrincipal();
-			requester = userRepository.findByUsername(requesterDetails.getUsername());
-
-			requester.eraseCredentials();
-			requesterAuthority = requester.getMaxAuthority();
-
-		} catch (Exception e) {
-			requesterAuthority = Authority.GUEST;
-		}
-
-		Set<Authority> authorities = buildNewUserAuthorities(requesterAuthority, signUpRequest.getAuthorities());
+		requester.eraseCredentials();
+		requesterAuthority = requester.getMaxAuthority();
+		
+		Set<Authority> authorities = AuthorityUtil.buildAuthorities(requesterAuthority, signUpRequest.getAuthorities());
 
 		user.setAuthorities(authorities);
 		User savedUser = userRepository.save(user);
 		return HttpUtil.getResponse(savedUser, HttpStatus.OK, requester);
 	}
-
-	public Set<Authority> buildNewUserAuthorities(Authority requesterAuthority, Set<String> stringAuthorities) {
-		Set<Authority> authorities = new HashSet<>();
-		final int finalAuthLevel = requesterAuthority.getAuthorityLevel();
-
-		if (stringAuthorities == null || requesterAuthority.equals(Authority.GUEST)) {
-			Authority userAuthority = Authority.GUEST;
-			authorities.add(userAuthority);
-		} else {
-			stringAuthorities.forEach(authority -> {
-				Authority internalAuthority = Authority.getAuthority(authority);
-				if (internalAuthority.getAuthorityLevel() >= finalAuthLevel) {
-					authorities.add(internalAuthority);
-				}
-			});
-		}
-		return authorities;
-	}
+	
+	
 
 }

@@ -10,7 +10,6 @@ package com.sashacorp.springmongojwtapi.models.persistence.user;
  */
 public class Status {
 
-	public static final String INCONSISTENT = "INCONSISTENT";
 	private String availability;
 	private boolean hardcoded;
 
