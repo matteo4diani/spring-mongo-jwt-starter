@@ -310,7 +310,7 @@
         "header": [],
         "body": {
           "mode": "raw",
-          "raw": "{\r\n    \"username\": \"m.fordiani@sashacorp.dev\",\r\n    \"password\": \"foo\",\r\n    \"companyName\": \"SashaCorp\"\r\n}",
+          "raw": "",
           "options": {
             "raw": {
               "language": "json"
