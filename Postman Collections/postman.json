@@ -356,6 +356,28 @@
         "url": "{{url}}/reset"
       },
       "response": []
+    },
+    {
+      "name": "Reset (first call) Copy",
+      "id": "6cd5a9d5-8dd3-41f6-b6d4-0966e8bbbe8a",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/reset"
+      },
+      "response": []
     }
   ],
   "auth": {
