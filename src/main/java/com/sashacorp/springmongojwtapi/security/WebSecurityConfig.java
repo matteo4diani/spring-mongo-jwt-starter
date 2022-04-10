@@ -56,8 +56,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
 		httpSecurity.csrf().disable().authorizeRequests().antMatchers("/authenticate").permitAll()
 				.antMatchers("/startup").access("@appConfigurator.isAppUninitialized()")
-				.antMatchers("/me", "/me/*").hasAnyAuthority("USER", "ADMIN")
-				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/events", "/events/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
+				.antMatchers("/me", "/me/*", "/events").hasAnyAuthority("USER", "HR", "MANAGER", "ADMIN")
+				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/events/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
 				.antMatchers("/admin", "/admin/*").hasAnyAuthority("MANAGER", "ADMIN")
 				.antMatchers("/reset").hasAuthority("ADMIN")
 				.anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()

@@ -4,7 +4,7 @@ import com.sashacorp.springmongojwtapi.util.http.hateoas.HateoasUtil;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Rel;
 
 /**
- * The only source for entity URL mappings, keeping the URLs made of {@code public static final String}s (i.e. constant expressions in Java)
+ * Utility class to centralize URL mappings, keeping the URLs made of {@code public static final String}s (i.e. constant expressions in Java)
  * allows URLs to be parametrized and shared across resources.
  * Controllers and {@link HateoasUtil} share the same set of URLs and HATEOAS-compliant resource representation can be handled automatically, see {@link Rel}
  * @author matteo
@@ -27,6 +27,7 @@ public class Url {
 	 */
 	public static final String MESSAGES = "/messages";
 	public static final String USERS = "/users";
+	public static final String EVENTS = "/events";
 
 	/*
 	 * modifiers
@@ -39,6 +40,7 @@ public class Url {
 	public static final String ME = "/me";
 	public static final String ALL = "/all";
 	public static final String TEAM = "/team";
+	public static final String NEW = "/new";
 	
 	public static final String AUTHORITIES = "/authorities";
 	public static final String STATUS = "/status";
@@ -79,5 +81,10 @@ public class Url {
 	public static final String RESPONDER_BY_USERNAME = USERS + BY_RESPONDER_USERNAME;
 	public static final String USER_AUTHORITIES_BY_USERNAME = USERS + AUTHORITIES + BY_USERNAME;
 	public static final String USER_STATUS_BY_USERNAME = USERS + STATUS + BY_USERNAME;
+
+	/*
+	 * Events Controller
+	 */
+	public static final String NEW_EVENT = EVENTS + NEW;
 
 }

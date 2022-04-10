@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.sashacorp.springmongojwtapi.models.persistence.msg.EventType;
 import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
+import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
  * API endpoints to manage event (leaves) types
@@ -33,7 +34,7 @@ public class EventTypeController {
 	 * 
 	 * @return 
 	 */
-	@RequestMapping({ "/events" })
+	@RequestMapping({ Url.EVENTS })
 	public ResponseEntity<List<EventType>> getAllEventTypes() {
 		return HttpUtil.getResponse(eventTypeRepository.findAll(), HttpStatus.OK);
 	}
@@ -42,7 +43,7 @@ public class EventTypeController {
 	 * @param eventType
 	 * @return
 	 */
-	@PostMapping({ "/events" })
+	@PostMapping({ Url.NEW_EVENT })
 	public ResponseEntity<EventType> postEventType(@RequestBody EventType eventType) {
 		if (eventTypeRepository.existsByType(eventType.getType())) {
 			return HttpUtil.getResponse(eventTypeRepository.findByType(eventType.getType()), HttpStatus.FORBIDDEN);

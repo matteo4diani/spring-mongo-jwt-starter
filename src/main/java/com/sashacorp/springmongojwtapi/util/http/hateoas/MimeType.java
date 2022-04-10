@@ -6,6 +6,11 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.security.Authority;
 
+/**
+ * Defines and represents custom MIME types for our domain
+ * @author matteo
+ *
+ */
 public enum MimeType {
 	USER("application/vnd.sashacorp.user.v1+json", User.class.getClass()), 
 	MESSAGE("application/vnd.sashacorp.message.v1+json", Message.class.getClass()), 

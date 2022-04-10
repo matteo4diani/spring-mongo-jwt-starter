@@ -10,6 +10,11 @@ import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.security.Authority;
 
+/**
+ * Utility class to centralize HATEOAS resource generation
+ * @author matteo
+ *
+ */
 public class HateoasUtil {
 	
 	public static <T extends Ownable & Hateoas> void setOwnedResources(T obj, User user) {

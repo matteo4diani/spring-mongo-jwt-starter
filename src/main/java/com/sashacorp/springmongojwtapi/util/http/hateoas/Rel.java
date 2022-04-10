@@ -9,9 +9,11 @@ import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.Url;
 
 /**
- * Utility class holding together: 
- * - {@link Url} Mappings for the user-facing controllers
- * - 
+ * Utility class holding together:<br/> 
+ * - {@link Url}: Mappings for the user-facing controllers<br/>
+ * - {@link Slug}: JSON property names that represent the relation of our domain entity with the given url<br/>
+ * - {@link MimeUtil}: Associates to each url one of the custom MIME types associated with our domain entities <br/>
+ * - {@link ResourceUtil}: Puts all this functionality together and offers granular access to user and admin resources for all MIME types.
  * @author matteo
  *
  */
@@ -30,7 +32,7 @@ public class Rel {
 	
 	/**
 	 * Helper {@code enum} to represent entity relations as special JSON properties (hence the leading '_')
-	 * Exposes a {@code public static String join(Slug...slugs)} method to join slugs and compose complex properties.
+	 * Exposes a {@code public static String join(Slug...slugs)} method to join slugs and compose property names.
 	 * @author matteo
 	 *
 	 */
@@ -88,10 +90,11 @@ public class Rel {
 	}
 	
 	/**
-	 * Helper static class defined in {@link Rel}: all URLs from {@link Url} registered in {@link Rel} should be notated
+	 * Helper static class defined in {@link Rel}: 
+	 * exposes a {@code public static String mime(String url)} method to get the MIME type string for entity {@link Url}s registered
+	 * in {@link Rel}.<br/>
+	 * All URLs from {@link Url} registered in {@link Rel} should be notated
 	 * with a MIME type to comply with HATEOAS.
-	 * Exposes a {@code public static String mime(String url)} method to get the MIME type string for entity {@link Url}s registered
-	 * in {@link Rel}. 
 	 * @author matteo
 	 *
 	 */
@@ -113,7 +116,8 @@ public class Rel {
 		
 		/**
 		 * Get the MIME type string for {@link Url}s registered in {@link Rel}
-		 * In accordance with REST,'application/json' is assumed by default if {@link Url} is not registered in {@code mimeTypesMap}
+		 * In accordance with REST.<br/>
+		 * 'application/json' is assumed by default if {@link Url} is not registered in {@code mimeTypesMap}
 		 * @param uri
 		 * @return
 		 */
