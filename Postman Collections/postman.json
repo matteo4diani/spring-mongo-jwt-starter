@@ -389,7 +389,22 @@
             }
           }
         },
-        "url": "{{url}}/reset"
+        "url": {
+          "raw": "{{url}}/reset?resetKey={{resetKey}}",
+          "host": [
+            "{{url}}"
+          ],
+          "path": [
+            "reset"
+          ],
+          "query": [
+            {
+              "key": "resetKey",
+              "value": "{{resetKey}}",
+              "type": "text"
+            }
+          ]
+        }
       },
       "response": []
     }
