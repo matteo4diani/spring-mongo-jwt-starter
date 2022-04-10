@@ -300,28 +300,6 @@
       "response": []
     },
     {
-      "name": "Reset",
-      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
-      "protocolProfileBehavior": {
-        "disableBodyPruning": true
-      },
-      "request": {
-        "method": "POST",
-        "header": [],
-        "body": {
-          "mode": "raw",
-          "raw": "",
-          "options": {
-            "raw": {
-              "language": "json"
-            }
-          }
-        },
-        "url": "{{url}}/reset"
-      },
-      "response": []
-    },
-    {
       "name": "Delete message (ADMIN) Copy",
       "event": [
         {
@@ -354,6 +332,28 @@
           }
         },
         "url": "{{url}}/messages/id/{{messageId}}"
+      },
+      "response": []
+    },
+    {
+      "name": "Reset",
+      "id": "c8fecbae-98f4-4eaa-862c-ab9cb24b75e1",
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": "{{url}}/reset"
       },
       "response": []
     }
