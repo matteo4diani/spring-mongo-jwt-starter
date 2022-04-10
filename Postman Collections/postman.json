@@ -233,13 +233,13 @@
         {
           "listen": "test",
           "script": {
+            "id": "ed32370e-6b40-4933-b18c-5357f5248477",
             "exec": [
               "if (pm.response.code === 200) {\r",
               "    pm.environment.set('messageId', pm.response.json().id);\r",
               "}"
             ],
-            "type": "text/javascript",
-            "id": "ed32370e-6b40-4933-b18c-5357f5248477"
+            "type": "text/javascript"
           }
         }
       ],
@@ -259,7 +259,7 @@
             }
           }
         },
-        "url": "{{url}}/messages/id/{{messageId}}"
+        "url": "{{url}}/users/authorities/{{username}}"
       },
       "response": []
     },
