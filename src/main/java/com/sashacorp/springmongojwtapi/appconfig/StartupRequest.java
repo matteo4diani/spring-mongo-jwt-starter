@@ -39,4 +39,11 @@ public class StartupRequest {
 		this.password = password;
 	}
 
+	public StartupRequest(String username, String password, String companyName) {
+		super();
+		this.username = username;
+		this.password = password;
+		this.companyName = companyName;
+	}
+	
 }
