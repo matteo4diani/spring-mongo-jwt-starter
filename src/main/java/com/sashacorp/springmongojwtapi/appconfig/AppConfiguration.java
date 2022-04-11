@@ -1,5 +1,7 @@
 package com.sashacorp.springmongojwtapi.appconfig;
 
+import java.util.Objects;
+
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 /**
@@ -50,6 +52,25 @@ public class AppConfiguration {
 	public String toString() {
 		return "AppConfiguration [id=" + id + ", companyName=" + companyName + ", isInitialized=" + isInitialized + "]";
 	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(companyName, id, isInitialized);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AppConfiguration other = (AppConfiguration) obj;
+		return Objects.equals(companyName, other.companyName) && Objects.equals(id, other.id)
+				&& isInitialized == other.isInitialized;
+	}
+	
 	
 	
 	

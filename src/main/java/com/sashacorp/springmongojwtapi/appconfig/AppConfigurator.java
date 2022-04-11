@@ -39,13 +39,15 @@ public class AppConfigurator {
 	}
 	
 	/**
-	 * Save an application configuration to persistence
+	 * Save an application configuration to persistence. If appConfig is null, creates new blank config.
 	 * @param appConfig
 	 * @return
 	 */
 	public AppConfiguration setAppConfiguration(AppConfiguration appConfig) {
 		List<AppConfiguration> configs = appConfigRepository.findAll();
-		
+		if (appConfig == null) {
+			appConfig = new AppConfiguration("", false);
+		}
 		if  (configs.size() > 0) {
 			appConfigRepository.deleteAll(configs);
 		}

@@ -100,8 +100,7 @@ public class AppConfiguratorController {
 			userRepository.deleteAll();
 			messageRepository.deleteAll();
 			eventTypeRepository.deleteAll();
-			AppConfiguration appConfig = new AppConfiguration("", false);	
-			AppConfiguration savedConfig = appConfigurator.setAppConfiguration(appConfig);
+			AppConfiguration savedConfig = appConfigurator.setAppConfiguration(null);
 			return HttpUtil.getResponse(savedConfig, HttpStatus.CREATED);			
 		} else {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.FORBIDDEN);

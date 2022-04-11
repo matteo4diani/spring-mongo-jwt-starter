@@ -14,6 +14,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.sashacorp.springmongojwtapi.appconfig.AppConfigurator;
+import com.sashacorp.springmongojwtapi.security.filter.HttpRequestLogFilter;
 import com.sashacorp.springmongojwtapi.security.filter.JwtRequestFilter;
 
 /**
@@ -29,6 +30,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private UserDetailsService myUserDetailsService;
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+	private HttpRequestLogFilter httpRequestLogFilter;
 	@Autowired
 	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(myUserDetailsService).passwordEncoder(passwordEncoder());
@@ -64,6 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
 		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		httpSecurity.addFilterAfter(httpRequestLogFilter, UsernamePasswordAuthenticationFilter.class);
 		/**
 		 * Calling httpSecurity.cors() disables HTTP OPTIONS pre-flight calls for CORS
 		 * negotiation, allowing us to work with a decoupled front-end.
