@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.persistence.msg;
+package com.sashacorp.springmongojwtapi.models.persistence.message;
 
 import java.util.Objects;
 
@@ -6,7 +6,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
- * Entity class offering a detailed representation/mold for the 'eventType' property of {@link Message}
+ * Entity class offering a detailed representation/mold for the 'eventType'
+ * property of {@link Message}
  * 
  * @author matteo
  *
@@ -18,7 +19,6 @@ public class EventType {
 	private String id;
 
 	private String type;
-
 	private String description;
 
 	public EventType() {
@@ -30,7 +30,6 @@ public class EventType {
 		this.type = type;
 		this.description = description;
 	}
-
 
 	public String getId() {
 		return id;
@@ -73,7 +72,5 @@ public class EventType {
 		return Objects.equals(description, other.description) && Objects.equals(id, other.id)
 				&& Objects.equals(type, other.type);
 	}
-	
-	
 
 }

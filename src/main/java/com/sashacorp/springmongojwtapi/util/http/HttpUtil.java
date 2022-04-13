@@ -12,10 +12,10 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.HateoasUtil;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Owned;
 
 /**
- * Utility class to centralize HTTP responses and apply filters and decorators. See {@link Hateoas}, {@link HateoasUtil} and {@link Ownable}.
+ * Utility class to centralize HTTP responses and apply filters and decorators. See {@link Hateoas}, {@link HateoasUtil} and {@link Owned}.
  * @author matteo
  *
  */
@@ -50,7 +50,7 @@ public class HttpUtil {
 	 * @param requester
 	 * @return
 	 */
-	public static <T extends Hateoas & Ownable> ResponseEntity<T> getResponse(T obj, HttpStatus httpStatus,
+	public static <T extends Hateoas & Owned> ResponseEntity<T> getResponse(T obj, HttpStatus httpStatus,
 			User requester) {
 		if (obj != null && requester != null) {
 			HateoasUtil.hateoas(obj, requester);
@@ -66,7 +66,7 @@ public class HttpUtil {
 	 * @param requester
 	 * @return
 	 */
-	public static <T extends Hateoas & Ownable> ResponseEntity<List<T>> getResponse(List<T> obj, HttpStatus httpStatus,
+	public static <T extends Hateoas & Owned> ResponseEntity<List<T>> getResponse(List<T> obj, HttpStatus httpStatus,
 			User requester) {
 		if (obj != null && requester != null) {
 			HateoasUtil.hateoas(obj, requester);

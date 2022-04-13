@@ -3,7 +3,7 @@ package com.sashacorp.springmongojwtapi.models.http.sse;
 import java.time.LocalDateTime;
 
 import com.sashacorp.springmongojwtapi.controller.sse.AdminSseController;
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.util.TimeUtil;
 
 /**

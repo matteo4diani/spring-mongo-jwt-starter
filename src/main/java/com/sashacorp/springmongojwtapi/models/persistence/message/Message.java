@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.models.persistence.msg;
+package com.sashacorp.springmongojwtapi.models.persistence.message;
 
 import java.time.LocalDateTime;
 import java.util.Map;
@@ -12,7 +12,7 @@ import com.sashacorp.springmongojwtapi.controller.MessageController;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Owned;
 
 /**
  * Represents a request for a generic event type. The message begins in
@@ -23,7 +23,7 @@ import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
  *
  */
 @Document(collection = "messages")
-public class Message implements Hateoas, Ownable {
+public class Message implements Hateoas, Owned {
 
 	@Id
 	private String id;

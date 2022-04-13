@@ -9,6 +9,6 @@ import com.sashacorp.springmongojwtapi.models.persistence.user.User;
  *
  */
 @FunctionalInterface
-public interface Ownable {
+public interface Owned {
 	User getOwner();
 }

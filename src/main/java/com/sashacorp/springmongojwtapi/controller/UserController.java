@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
