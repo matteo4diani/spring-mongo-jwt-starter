@@ -21,7 +21,7 @@ import com.sashacorp.springmongojwtapi.models.http.Error;
 import com.sashacorp.springmongojwtapi.models.http.Notification;
 import com.sashacorp.springmongojwtapi.models.http.sse.AdminNotificationSse;
 import com.sashacorp.springmongojwtapi.models.http.sse.UserNotificationSse;
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;

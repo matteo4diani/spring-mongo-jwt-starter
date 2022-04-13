@@ -89,7 +89,7 @@ public class AppConfiguratorController {
 	 * @return
 	 */
 	@PostMapping(Url.RESET)
-	public ResponseEntity<?> stopAndClean(@RequestParam(name = Par.RESET_KEY, required = false) String resetKey) {
+	public ResponseEntity<?> reset(@RequestParam(name = Par.RESET_KEY, required = false) String resetKey) {
 		if (appConfigurator.getAppConfiguration() == null) {
 			return HttpUtil.getHttpStatusResponse(HttpStatus.NOT_FOUND);
 		}

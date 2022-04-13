@@ -15,12 +15,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.sashacorp.springmongojwtapi.models.http.PlainTextResponse;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
-import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
-import com.sashacorp.springmongojwtapi.repository.MessageRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
-import com.sashacorp.springmongojwtapi.util.log.test.Emoji;
-import com.sashacorp.springmongojwtapi.util.log.test.Log;
+import com.sashacorp.springmongojwtapi.util.log.Log;
+import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
@@ -32,10 +31,6 @@ public class ITAppConfiguratorController {
 	AppConfigurator appConfigurator;
 	@Autowired
 	UserRepository userRepository;
-	@Autowired
-	MessageRepository messageRepository;
-	@Autowired
-	EventTypeRepository eventTypeRepository;
 
 	@Autowired
 	AppConfiguratorController appConfiguratorController;
@@ -44,11 +39,11 @@ public class ITAppConfiguratorController {
 	final static String PASSWORD_TO_SAVE = "foo";
 	final static String COMPANY_NAME_TO_SAVE = "SashaCorp";
 
-	final static Logger LOG = LoggerFactory.getLogger(ITAppConfiguratorController.class);
+	final static Logger logger = LoggerFactory.getLogger(ITAppConfiguratorController.class);
 
 	@Test
 	public void stage1_when_firstStartUp_registerFirstUser_should_registerUserAndReturnStartupResponse() {
-		LOG.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator startup/shutdown controller..."));
+		logger.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator startup controller..."));
 		/*
 		 * clean up before test
 		 */
@@ -59,9 +54,7 @@ public class ITAppConfiguratorController {
 		StartupResponse startupResponse = response.getBody() instanceof StartupResponse
 				? (StartupResponse) response.getBody()
 				: null;
-
-		assertTrue(startupResponse instanceof StartupResponse);
-		assertTrue(startupResponse != null);
+		assertTrue(startupResponse instanceof StartupResponse && startupResponse != null);
 		assertTrue(startupResponse.getAdmin().getUsername().equals(startupRequest.getUsername()));
 		/*
 		 * The password field is notated with {@link JsonIgnore}, so we have to recover
@@ -72,15 +65,15 @@ public class ITAppConfiguratorController {
 			assertTrue(encoder.matches(PASSWORD_TO_SAVE, savedUser.getPassword()));
 			assertTrue(startupResponse.getAppConfig().isInitialized());
 			assertTrue(startupResponse.getAppConfig().getCompanyName().equals(COMPANY_NAME_TO_SAVE));
-			LOG.info(Log.msg(Emoji.TRAFFICLIGHT, true, "first user registered"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, true, "first user registered"));
 		} catch (AssertionError e) {
-			LOG.info(Log.msg(Emoji.TRAFFICLIGHT, false, "failed to register first user"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false, "failed to register first user"));
 		}
 	}
 
 	@Test
-	public void stage1_when_not_firstStartUp_registerFirstUser_should_returnHttpStatusForbidden() {
-		LOG.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator startup/shutdown controller..."));
+	public void stage2_when_not_firstStartUp_registerFirstUser_should_returnHttpStatusForbidden() {
+		logger.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator startup controller..."));
 		/*
 		 * clean up before test
 		 */
@@ -90,9 +83,38 @@ public class ITAppConfiguratorController {
 		try {
 			assertTrue(response.getStatusCode().equals(HttpStatus.FORBIDDEN)
 					|| response.getStatusCode().equals(HttpStatus.NOT_FOUND));
-			LOG.info(Log.msg(Emoji.TRAFFICLIGHT, true, "app config controller is functioning correctly after init"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, true, "app config controller is functioning correctly after init"));
 		} catch (AssertionError e) {
-			LOG.info(Log.msg(Emoji.TRAFFICLIGHT, false, "app config controller is malfunctioning: should not register user when app is already initialized"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false,
+					"app config controller is malfunctioning: should not register user when app is already initialized"));
+		}
+	}
+
+	@Test
+	public void stage3_reset_should_resetAppConfiguration() {
+		logger.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator reset controller..."));
+		/*
+		 * clean up before test
+		 */
+		ResponseEntity<?> responseWithoutResetKey = appConfiguratorController.reset(null);
+		PlainTextResponse plainTextResponse = responseWithoutResetKey.getBody() instanceof PlainTextResponse
+				? (PlainTextResponse) responseWithoutResetKey.getBody()
+				: null;
+		String resetKey = plainTextResponse.getMessage();
+		ResponseEntity<?> responseWithResetKey = appConfiguratorController.reset(resetKey);
+		AppConfiguration appConfiguration = responseWithResetKey.getBody() instanceof AppConfiguration
+				? (AppConfiguration) responseWithResetKey.getBody()
+				: null;
+
+		try {
+			assertTrue(plainTextResponse instanceof PlainTextResponse);
+			assertTrue(appConfiguration instanceof AppConfiguration);
+			assertTrue(appConfiguration.getCompanyName().isEmpty());
+			assertTrue(!appConfiguration.isInitialized());
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, true, "app config controller resets app correctly"));
+		} catch (AssertionError e) {
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false,
+					"app config controller is malfunctioning: should reset app when asked to"));
 		}
 	}
 

@@ -14,7 +14,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sashacorp.springmongojwtapi.security.Authority;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Hateoas;
 import com.sashacorp.springmongojwtapi.util.http.hateoas.Links;
-import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
+import com.sashacorp.springmongojwtapi.util.http.hateoas.Owned;
 
 /**
  * Entity class representing users. <br>
@@ -29,7 +29,7 @@ import com.sashacorp.springmongojwtapi.util.http.hateoas.Ownable;
  *
  */
 @Document(collection = "users")
-public class User implements Hateoas, Ownable {
+public class User implements Hateoas, Owned {
 	private static final long serialVersionUID = 1L;
 
 	@Id

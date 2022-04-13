@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.EventType;
+import com.sashacorp.springmongojwtapi.models.persistence.message.EventType;
 import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
 import com.sashacorp.springmongojwtapi.util.http.HttpUtil;
 import com.sashacorp.springmongojwtapi.util.http.Url;
@@ -48,7 +48,7 @@ public class EventTypeController {
 		if (eventTypeRepository.existsByType(eventType.getType())) {
 			return HttpUtil.getResponse(eventTypeRepository.findByType(eventType.getType()), HttpStatus.FORBIDDEN);
 		}
-		return HttpUtil.getResponse(eventTypeRepository.save(eventType), HttpStatus.OK);
+		return HttpUtil.getResponse(eventTypeRepository.save(eventType), HttpStatus.CREATED);
 	}
 
 }

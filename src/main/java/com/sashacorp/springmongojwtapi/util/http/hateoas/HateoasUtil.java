@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.security.Authority;
 
@@ -17,7 +17,7 @@ import com.sashacorp.springmongojwtapi.security.Authority;
  */
 public class HateoasUtil {
 	
-	public static <T extends Ownable & Hateoas> void setOwnedResources(T obj, User user) {
+	public static <T extends Owned & Hateoas> void setOwnedResources(T obj, User user) {
 		boolean objIsOwnedByUser = obj.getOwner().getUsername().equals(user.getUsername());
 		MimeType type = getMimeType(obj);
 		
@@ -39,11 +39,11 @@ public class HateoasUtil {
 		}
 	}
 	
-	public static <T extends Ownable & Hateoas> List<T> hateoas(List<T> obj, User user) {
+	public static <T extends Owned & Hateoas> List<T> hateoas(List<T> obj, User user) {
 		obj.forEach((o) -> {setOwnedResources(o, user);});
 		return obj;
 	}
-	public static <T extends Ownable & Hateoas> T hateoas(T obj, User user) {
+	public static <T extends Owned & Hateoas> T hateoas(T obj, User user) {
 		setOwnedResources(obj, user);
 		return obj;
 	}

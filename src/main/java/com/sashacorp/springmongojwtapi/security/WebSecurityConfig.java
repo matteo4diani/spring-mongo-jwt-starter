@@ -62,7 +62,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.antMatchers("/me", "/me/*", "/events").hasAnyAuthority("USER", "HR", "MANAGER", "ADMIN")
 				.antMatchers("/users", "/users/*", "/messages", "/messages/*", "/events/*", "/register").hasAnyAuthority("HR", "MANAGER", "ADMIN")
 				.antMatchers("/admin", "/admin/*").hasAnyAuthority("MANAGER", "ADMIN")
-				.antMatchers("/reset").hasAuthority("ADMIN")
+				.antMatchers("/reset", "/actuator", "/actuator/*").hasAuthority("ADMIN")
 				.anyRequest().authenticated().and().exceptionHandling().and().sessionManagement()
 				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 

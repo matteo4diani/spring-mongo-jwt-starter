@@ -3,7 +3,7 @@ package com.sashacorp.springmongojwtapi.util;
 import java.util.List;
 import java.util.Map;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.DefaultStatus;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;

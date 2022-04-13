@@ -16,8 +16,8 @@ public class AppConfiguration {
 	
 	private String companyName;
 	private boolean isInitialized;
-
 	
+
 	public String getId() {
 		return id;
 	}

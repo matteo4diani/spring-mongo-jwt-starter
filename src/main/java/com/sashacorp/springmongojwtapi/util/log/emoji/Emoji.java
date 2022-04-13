@@ -1,4 +1,4 @@
-package com.sashacorp.springmongojwtapi.util.log.test;
+package com.sashacorp.springmongojwtapi.util.log.emoji;
 
 /**
  * Utility to centralize emojis and generation of emoji-decorated logs

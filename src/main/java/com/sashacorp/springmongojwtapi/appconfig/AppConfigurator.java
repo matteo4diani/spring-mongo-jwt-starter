@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.EventType;
+import com.sashacorp.springmongojwtapi.models.persistence.message.EventType;
 import com.sashacorp.springmongojwtapi.models.persistence.user.DefaultStatus;
 import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
 import com.sashacorp.springmongojwtapi.repository.UserRepository;
@@ -60,7 +60,7 @@ public class AppConfigurator {
 	}
 	
 	/**
-	 * Initializes the event types repository with basic defaults
+	 * Initializes the event types repository with basic defaults for demos and testing
 	 * @return
 	 */
 	public List<EventType> initEventTypeRepository() {

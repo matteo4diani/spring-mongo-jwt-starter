@@ -11,12 +11,15 @@ Just import in Eclipse as 'Existing Maven Project'. You need a running MongoDB i
 * For user facing setups configuration and credentials should be passed through environment variables injected at runtime `(in application.properties you can find a sample of Spring's injection syntax for properties -> "${ENV_VARIABLE_NAME:default-value-if-env-variable-not-found}")`
 
 # DevLog
-### To Do #2
+### To Do #3
 - Build test suite and environment - ONGOING - [How to test Spring apps](https://stackabuse.com/how-to-test-a-spring-boot-application/) - [How to use a separate property file for testing](https://www.baeldung.com/spring-tests-override-properties) - [How to test CORS functionality](https://stackoverflow.com/questions/42588692/testing-cors-in-springboottest) - [How to run integration tests in a specific order](https://stackoverflow.com/questions/3693626/how-to-run-test-methods-in-specific-order-in-junit4) - [How to test the web layer of a Spring app](https://spring.io/guides/gs/testing-web/)
-- Implement logging - ✔️ - [Spring logging best practices](https://coralogix.com/blog/spring-boot-logging-best-practices-guide/✔️✔️)
-- Build init phase - ✔️ - [How to add SPEL conditional expressions to Spring configurators](https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html) - [How to schedule startup event listeners](https://stackoverflow.com/questions/27405713/running-code-after-spring-boot-starts)
 - Setup GitHub->Heroku CI/CD
 - Implement queries by responder
+
+### To Do #2
+- Add Spring Boot Actuator and secure mappings (enabled shutdown mapping) - ✔️ - [How to add shutdown over HTTP function with Spring Actuator](https://www.baeldung.com/spring-boot-shutdown)
+- Implement logging - ✔️ - [Spring logging best practices](https://coralogix.com/blog/spring-boot-logging-best-practices-guide/)
+- Build init phase - ✔️ - [How to add SPEL conditional expressions to Spring configurators](https://docs.spring.io/spring-security/site/docs/5.0.7.RELEASE/reference/html/el-access.html) - [How to schedule startup event listeners](https://stackoverflow.com/questions/27405713/running-code-after-spring-boot-starts)
 
 ### To Do #1
 - Implement enums where we have hardcoded collections of sort - ✔️

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * Utility class to get {@link LocalDateTime} instances in a set timezone
  * ({@link ZoneId} = 'Europe/Rome')
@@ -11,12 +13,14 @@ import java.time.ZonedDateTime;
  * @author matteo
  *
  */
+
 public class TimeUtil {
 
-	private static final ZoneId zid = ZoneId.of("Europe/Rome");
-
+	@Value("${sashacorp.timezone}")
+	private static String timezone;
+	private static final ZoneId zoneId = ZoneId.of(timezone);
 	public static ZoneId getZoneId() {
-		return zid;
+		return zoneId;
 	}
 
 	/**
@@ -25,6 +29,6 @@ public class TimeUtil {
 	 * @return
 	 */
 	public static LocalDateTime now() {
-		return ZonedDateTime.now(zid).toLocalDateTime();
+		return ZonedDateTime.now(getZoneId()).toLocalDateTime();
 	}
 }

@@ -16,10 +16,17 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.sashacorp.springmongojwtapi.util.log.test.Emoji;
-import com.sashacorp.springmongojwtapi.util.log.test.Log;
+import com.sashacorp.springmongojwtapi.util.log.Log;
+import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 
 /**
+ * This is the entry point of all tests, as it is the only file in the root directory of our app:
+ * if you need some logic executed before other integration tests are run put it in here
+ * (you shouldn't need any specific external state for unit tests).<br/>
+ * To ensure the order of test we add {@code @FixMethodOrder(MethodSorters.NAME_ASCENDING)}<br/>
+ * For integration tests (IT prefix) that need to interact with the Spring context we add the following annotations:
+ * {@code @RunWith(SpringRunner.class)} and {@code @SpringBootTest}<br/>
+ * Tests are executed in alphabetical order on directory (where root is first by default), then on file.<br/>
  * Test for {@link SpringMongoJwtApiApplication}.
  * Tests for loaded context.
  * @author matteo
@@ -33,22 +40,22 @@ public class ITSpringMongoJwtApiApplication {
 	@Autowired
 	ApplicationContext applicationContext;
 
-	final static Logger LOG = LoggerFactory.getLogger(ITSpringMongoJwtApiApplication.class);
+	final static Logger logger = LoggerFactory.getLogger(ITSpringMongoJwtApiApplication.class);
 
 	@Test
 	public void stage1_contextLoads() {
-		LOG.info(Log.msg(Emoji.COFFEE, "checking loaded beans..."));
+		logger.info(Log.msg(Emoji.COFFEE, "checking loaded beans..."));
 		List<String> beans = Stream.of(applicationContext.getBeanDefinitionNames()).sorted().toList();
 
 		beans.forEach((bean) -> {
-			LOG.info(Log.msg(Emoji.COFFEE, bean));
+			logger.info(Log.msg(Emoji.COFFEE, bean));
 		});
 
 		try{
 			assertTrue(beans.size() > 0);
-			LOG.info(Log.msg(Emoji.COFFEE, true, "beans loaded and toasted"));
+			logger.info(Log.msg(Emoji.COFFEE, true, "beans loaded and toasted"));
 		} catch (AssertionError e) {
-			LOG.info(Log.msg(Emoji.COFFEE, false, "failed to load beans"));
+			logger.info(Log.msg(Emoji.COFFEE, false, "failed to load beans"));
 		}
 	}
 

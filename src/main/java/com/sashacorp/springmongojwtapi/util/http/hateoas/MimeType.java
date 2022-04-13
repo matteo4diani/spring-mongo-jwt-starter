@@ -1,7 +1,7 @@
 package com.sashacorp.springmongojwtapi.util.http.hateoas;
 
-import com.sashacorp.springmongojwtapi.models.persistence.msg.EventType;
-import com.sashacorp.springmongojwtapi.models.persistence.msg.Message;
+import com.sashacorp.springmongojwtapi.models.persistence.message.EventType;
+import com.sashacorp.springmongojwtapi.models.persistence.message.Message;
 import com.sashacorp.springmongojwtapi.models.persistence.user.Status;
 import com.sashacorp.springmongojwtapi.models.persistence.user.User;
 import com.sashacorp.springmongojwtapi.security.Authority;

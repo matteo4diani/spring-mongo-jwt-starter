@@ -21,6 +21,7 @@ public class Url {
 	 */
 	public static final String STARTUP = "/startup";
 	public static final String RESET = "/reset";
+	public static final String TIMEZONES = "/timezones";
 	
 	/*
 	 * entities
