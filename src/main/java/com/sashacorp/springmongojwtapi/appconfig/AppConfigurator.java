@@ -60,7 +60,7 @@ public class AppConfigurator {
 	}
 	
 	/**
-	 * Initializes the event types repository with basic defaults
+	 * Initializes the event types repository with basic defaults for demos and testing
 	 * @return
 	 */
 	public List<EventType> initEventTypeRepository() {

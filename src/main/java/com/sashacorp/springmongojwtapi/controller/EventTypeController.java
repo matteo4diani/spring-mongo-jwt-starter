@@ -48,7 +48,7 @@ public class EventTypeController {
 		if (eventTypeRepository.existsByType(eventType.getType())) {
 			return HttpUtil.getResponse(eventTypeRepository.findByType(eventType.getType()), HttpStatus.FORBIDDEN);
 		}
-		return HttpUtil.getResponse(eventTypeRepository.save(eventType), HttpStatus.OK);
+		return HttpUtil.getResponse(eventTypeRepository.save(eventType), HttpStatus.CREATED);
 	}
 
 }

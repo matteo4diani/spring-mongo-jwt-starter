@@ -1,6 +1,5 @@
 package com.sashacorp.springmongojwtapi.appconfig;
 
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.FixMethodOrder;
@@ -32,7 +31,6 @@ public class ITAppConfiguratorController {
 	AppConfigurator appConfigurator;
 	@Autowired
 	UserRepository userRepository;
-	
 
 	@Autowired
 	AppConfiguratorController appConfiguratorController;
@@ -56,9 +54,7 @@ public class ITAppConfiguratorController {
 		StartupResponse startupResponse = response.getBody() instanceof StartupResponse
 				? (StartupResponse) response.getBody()
 				: null;
-
-		assertTrue(startupResponse instanceof StartupResponse);
-		assertTrue(startupResponse != null);
+		assertTrue(startupResponse instanceof StartupResponse && startupResponse != null);
 		assertTrue(startupResponse.getAdmin().getUsername().equals(startupRequest.getUsername()));
 		/*
 		 * The password field is notated with {@link JsonIgnore}, so we have to recover
@@ -89,10 +85,11 @@ public class ITAppConfiguratorController {
 					|| response.getStatusCode().equals(HttpStatus.NOT_FOUND));
 			logger.info(Log.msg(Emoji.TRAFFICLIGHT, true, "app config controller is functioning correctly after init"));
 		} catch (AssertionError e) {
-			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false, "app config controller is malfunctioning: should not register user when app is already initialized"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false,
+					"app config controller is malfunctioning: should not register user when app is already initialized"));
 		}
 	}
-	
+
 	@Test
 	public void stage3_reset_should_resetAppConfiguration() {
 		logger.info(Log.msg(Emoji.TRAFFICLIGHT, "checking app configurator reset controller..."));
@@ -108,15 +105,16 @@ public class ITAppConfiguratorController {
 		AppConfiguration appConfiguration = responseWithResetKey.getBody() instanceof AppConfiguration
 				? (AppConfiguration) responseWithResetKey.getBody()
 				: null;
-		
+
 		try {
 			assertTrue(plainTextResponse instanceof PlainTextResponse);
 			assertTrue(appConfiguration instanceof AppConfiguration);
 			assertTrue(appConfiguration.getCompanyName().isEmpty());
-			assertFalse(appConfiguration.isInitialized());
+			assertTrue(!appConfiguration.isInitialized());
 			logger.info(Log.msg(Emoji.TRAFFICLIGHT, true, "app config controller resets app correctly"));
 		} catch (AssertionError e) {
-			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false, "app config controller is malfunctioning: should reset app when asked to"));
+			logger.info(Log.msg(Emoji.TRAFFICLIGHT, false,
+					"app config controller is malfunctioning: should reset app when asked to"));
 		}
 	}
 

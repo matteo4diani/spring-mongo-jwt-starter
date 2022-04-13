@@ -20,6 +20,13 @@ import com.sashacorp.springmongojwtapi.util.log.Log;
 import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 
 /**
+ * This is the entry point of all tests, as it is the only file in the root directory of our app:
+ * if you need some logic executed before other integration tests are run put it in here
+ * (you shouldn't need any specific external state for unit tests).<br/>
+ * To ensure the order of test we add {@code @FixMethodOrder(MethodSorters.NAME_ASCENDING)}<br/>
+ * For integration tests (IT prefix) that need to interact with the Spring context we add the following annotations:
+ * {@code @RunWith(SpringRunner.class)} and {@code @SpringBootTest}<br/>
+ * Tests are executed in alphabetical order on directory (where root is first by default), then on file.<br/>
  * Test for {@link SpringMongoJwtApiApplication}.
  * Tests for loaded context.
  * @author matteo
