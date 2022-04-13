@@ -409,7 +409,7 @@
       "response": []
     },
     {
-      "name": "New Request",
+      "name": "Shutdown",
       "id": "88419d27-44c1-451d-96f2-510acc8460ba",
       "protocolProfileBehavior": {
         "disableBodyPruning": true
