@@ -5,6 +5,6 @@ package com.sashacorp.springmongojwtapi.appconfig;
  * @author matteo
  *
  */
-public class ITAppConfigurationRepository {
+public class TestAppConfigurationRepository {
 	
 }

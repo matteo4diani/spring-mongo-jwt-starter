@@ -1,5 +1,5 @@
 package com.sashacorp.springmongojwtapi.service.sse;
 
-public class ITAdminNotificationService {
+public class TestUserNotificationService {
 
 }

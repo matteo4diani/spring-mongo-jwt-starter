@@ -1,5 +1,5 @@
 package com.sashacorp.springmongojwtapi.controller.sse;
 
-public class ITMeSseController {
+public class TestMeSseController {
 
 }

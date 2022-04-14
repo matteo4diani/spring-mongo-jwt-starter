@@ -35,12 +35,12 @@ import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ITSpringMongoJwtApiApplication {
+public class TestSpringMongoJwtApiApplication {
 
 	@Autowired
 	ApplicationContext applicationContext;
 
-	final static Logger logger = LoggerFactory.getLogger(ITSpringMongoJwtApiApplication.class);
+	final static Logger logger = LoggerFactory.getLogger(TestSpringMongoJwtApiApplication.class);
 
 	@Test
 	public void stage1_contextLoads() {
