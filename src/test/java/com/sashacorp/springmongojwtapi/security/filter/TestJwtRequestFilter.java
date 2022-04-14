@@ -1,5 +1,5 @@
 package com.sashacorp.springmongojwtapi.security.filter;
 
-public class ITHttpRequestLogFilter {
+public class TestJwtRequestFilter {
 
 }

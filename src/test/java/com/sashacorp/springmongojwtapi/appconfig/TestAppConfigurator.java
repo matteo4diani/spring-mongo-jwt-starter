@@ -31,13 +31,13 @@ import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ITAppConfigurator {
+public class TestAppConfigurator {
 	@Autowired
 	AppConfigurator appConfigurator;
 	@Autowired
 	EventTypeRepository eventTypeRepository;
 
-	final static Logger logger = LoggerFactory.getLogger(ITAppConfigurator.class);
+	final static Logger logger = LoggerFactory.getLogger(TestAppConfigurator.class);
 	private static AppConfiguration savedAppConfiguration;
 	private static List<EventType> savedDefaultEventTypeList;
 	private static final String COMPANY_NAME_TO_SAVE = "SashaCorp";

@@ -1,5 +1,5 @@
 package com.sashacorp.springmongojwtapi.repository;
 
-public class ITUserRepository {
+public class TestMessageRepository {
 
 }

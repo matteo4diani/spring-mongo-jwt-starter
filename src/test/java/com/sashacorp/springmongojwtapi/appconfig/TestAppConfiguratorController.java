@@ -24,7 +24,7 @@ import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ITAppConfiguratorController {
+public class TestAppConfiguratorController {
 	@Autowired
 	private PasswordEncoder encoder;
 	@Autowired
@@ -39,7 +39,7 @@ public class ITAppConfiguratorController {
 	final static String PASSWORD_TO_SAVE = "foo";
 	final static String COMPANY_NAME_TO_SAVE = "SashaCorp";
 
-	final static Logger logger = LoggerFactory.getLogger(ITAppConfiguratorController.class);
+	final static Logger logger = LoggerFactory.getLogger(TestAppConfiguratorController.class);
 
 	@Test
 	public void stage1_when_firstStartUp_registerFirstUser_should_registerUserAndReturnStartupResponse() {

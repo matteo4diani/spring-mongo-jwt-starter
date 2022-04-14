@@ -17,7 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.sashacorp.springmongojwtapi.appconfig.AppConfigurator;
-import com.sashacorp.springmongojwtapi.appconfig.ITAppConfiguratorController;
+import com.sashacorp.springmongojwtapi.appconfig.TestAppConfiguratorController;
 import com.sashacorp.springmongojwtapi.models.persistence.message.EventType;
 import com.sashacorp.springmongojwtapi.repository.EventTypeRepository;
 import com.sashacorp.springmongojwtapi.util.log.Log;
@@ -26,7 +26,7 @@ import com.sashacorp.springmongojwtapi.util.log.emoji.Emoji;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class ITEventTypeController {
+public class TestEventTypeController {
 	@Autowired
 	AppConfigurator appConfigurator;
 	@Autowired
@@ -36,7 +36,7 @@ public class ITEventTypeController {
 	
 	private static final String EVENT_TYPE_TO_SAVE = "EXAMPLE";
 	
-	final static Logger logger = LoggerFactory.getLogger(ITAppConfiguratorController.class);
+	final static Logger logger = LoggerFactory.getLogger(TestAppConfiguratorController.class);
 
 	@Test
 	public void stage1_postEventType_should_saveEventType_but_refuseExistingEventTypes() {

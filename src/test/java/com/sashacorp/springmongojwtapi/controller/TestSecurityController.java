@@ -1,5 +1,5 @@
 package com.sashacorp.springmongojwtapi.controller;
 
-public class ITSecurityController {
+public class TestSecurityController {
 
 }
